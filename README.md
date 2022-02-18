@@ -1,5 +1,5 @@
 # Project-Terraforma
-A Unity-based RTS terraforming economy game. test
+A Unity-based RTS terraforming economy game.
 
 ## Description:
 A real-time construction game in which a planet is to be colonized from an orbital planetary view. 
