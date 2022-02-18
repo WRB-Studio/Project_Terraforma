@@ -16,8 +16,14 @@ public class GUIHandler : MonoBehaviour
     public Text txtStorage;
     public GameObject ressourceGUIElementPrefab;
 
-    [Header("PlaySpeed properties")]
+    [Header("Build menu GUI properties")]
+    public GameObject buildMenuGUIParent;
+
+    [Header("Quick menu")]
     public Button btPlaySpeed;
+    public Button btPlanetTerraforming;
+    public Button btRessources;
+    public Button btBuildMenue;
 
     [Header("Planet attribute effect properties")]
     public GameObject planetAttributeEffectGUIParent;
@@ -35,7 +41,32 @@ public class GUIHandler : MonoBehaviour
 
     public static void init()
     {
+        instance.initButtons();
+    }
+
+    public void initButtons()
+    {
         instance.btPlaySpeed.onClick.AddListener(delegate { setNextPlaySpeed(); });
+
+        instance.btPlanetTerraforming.onClick.AddListener(delegate { showHide(planetAttributeGUIParent); });
+        instance.btRessources.onClick.AddListener(delegate { showHide(ressourceGUIParent); });
+        instance.btBuildMenue.onClick.AddListener(delegate { showHide(buildMenuGUIParent); });
+
+        planetAttributeGUIParent.SetActive(false);
+        ressourceGUIParent.SetActive(false);
+        buildMenuGUIParent.SetActive(false);
+    }
+
+    public void showHide(GameObject guiObject)
+    {
+        if (guiObject.activeSelf)
+        {
+            guiObject.SetActive(false);
+        }
+        else
+        {
+            guiObject.SetActive(true);
+        }
     }
 
     public static void setNextPlaySpeed()
