@@ -1,0 +1,3 @@
+rep "Project Terraforma@Kalicronic_4885732@cloud"
+  path "/"
+    smartbranch "/main"
