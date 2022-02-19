@@ -9,4 +9,23 @@ public class PopulationBuilding : Building
     public Tuple<long, long> housingUnits2; //occupid, max units+
     public float satisfaction;
     public bool isCapital;
+
+    public override void onBuild(bool inBuildModeVal)
+    {
+        base.onBuild(inBuildModeVal);
+
+        if (!inBuildMode)
+        {
+            Population.instance.totalApartmentUnits += housingUnits;
+           
+            if (name.Contains("Colony Ship"))
+            {
+                Population.instance.totalPopulation += housingUnits;
+
+            }
+        }
+
+        
+
+    }
 }

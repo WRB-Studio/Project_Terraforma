@@ -5,7 +5,11 @@ using UnityEngine;
 public class ObjectPlacement : MonoBehaviour
 {
     private GameObject currentDragObject;
-    
+    public float objectRotateFactor = 2;
+
+    public Color cantBuildColor;
+    public Color canBuildColor;
+
     public static ObjectPlacement instance;
 
 
@@ -15,49 +19,63 @@ public class ObjectPlacement : MonoBehaviour
         instance = this;
     }
 
-    public void Update()
+
+    private IEnumerator dragAndPlacementCoroutine()
     {
-        //raycast with mouse to planet surface. Check water, other building and other objects
-        string debug = "";
-        if(currentDragObject != null)
+        float placeableCountdown = 0.5f;
+
+        while (currentDragObject != null)
         {
-            //ray to planet surface to placing building
-            Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
-            RaycastHit[] hits = Physics.RaycastAll(ray);
+            if (placeableCountdown > 0)
+                placeableCountdown -= Time.deltaTime;
 
-            foreach (RaycastHit hitCol in hits)
+            yield return null;
+
+            //object dragging
+            if (currentDragObject != null)
             {
-                //when pointer on planet surface set building position to pointer
-                if (hitCol.transform.tag == "PlanetSurface")
+                //ray to planet surface to placing building
+                Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
+                RaycastHit[] hits = Physics.RaycastAll(ray);
+
+                foreach (RaycastHit hitCol in hits)
                 {
-
-                    currentDragObject.transform.position = hitCol.point;//building position to pointer position
-
-                    //rotation to planet gravity
-                    Vector3 gravityUp = (currentDragObject.transform.position - hitCol.transform.position).normalized;
-                    currentDragObject.transform.rotation = Quaternion.FromToRotation(currentDragObject.transform.up, gravityUp) * currentDragObject.transform.rotation;
-
-                    //build building on current position when no collisions
-                    if (Input.GetMouseButtonUp(0))
+                    if (hitCol.transform.tag == "PlanetSurface")//when pointer on planet surface
                     {
-                        currentDragObject = null;
-                        break;
+                        currentDragObject.transform.position = hitCol.point;//building position to ray pointer
+
+                        //rotation to planet gravity
+                        Vector3 gravityUp = (currentDragObject.transform.position - hitCol.transform.position).normalized;
+                        currentDragObject.transform.rotation = Quaternion.FromToRotation(currentDragObject.transform.up, gravityUp) * currentDragObject.transform.rotation;
+
+                        //object rotation by mouse scroll wheel
+                        if (Input.GetKey(KeyCode.LeftShift))
+                            currentDragObject.transform.Rotate(0, Input.mouseScrollDelta.y * objectRotateFactor, 0);
+
+                        //place building on current ray point when no collisions
+                        if (placeableCountdown <= 0 && currentDragObject.GetComponent<Building>() != null && currentDragObject.GetComponent<Building>().isBuildable() && Input.GetMouseButtonUp(0))
+                        {
+                            if (currentDragObject.GetComponent<Building>() != null)//place building
+                                currentDragObject.GetComponent<Building>().onBuild(false);
+
+                            currentDragObject = null;
+                            break;
+                        }
                     }
                 }
-            }
 
-            if (Input.GetKeyDown(KeyCode.Escape))
-            {
-                Destroy(currentDragObject);
-                currentDragObject = null;
+                if (Input.GetKeyDown(KeyCode.Escape))
+                {
+                    Destroy(currentDragObject);
+                    currentDragObject = null;
+                }
             }
         }
     }
 
-
-    public void instantiateDragObject(GameObject dragObject)
+    public void startObjectPlacement(GameObject dragObject)
     {
-        if(currentDragObject != null)
+        if (currentDragObject != null)
         {
             Destroy(currentDragObject);
             currentDragObject = null;
@@ -65,5 +83,12 @@ public class ObjectPlacement : MonoBehaviour
 
         GameObject newDragObject = Instantiate(dragObject);
         currentDragObject = newDragObject;
+
+        if (currentDragObject.GetComponent<Building>() != null)
+        {
+            currentDragObject.GetComponent<Building>().onBuild(true);
+        }
+
+        StartCoroutine(dragAndPlacementCoroutine());
     }
 }

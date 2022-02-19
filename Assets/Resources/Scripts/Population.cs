@@ -25,7 +25,7 @@ public class Population : MonoBehaviour
     public long totalHomelessLivingSpace;
 
     [Header("Job infos")]
-    public long totalJobs;
+    public long totalWorkplaces;
     public long totalEmployed;
     public long totalUnemployed;
 

@@ -10,7 +10,9 @@ public class BuildingButton : MonoBehaviour
 
     private void Awake()
     {
-        GetComponent<Button>().onClick.AddListener(delegate { ObjectPlacement.instance.instantiateDragObject(buildingPrefab); });
+        transform.GetChild(0).GetComponent<Text>().text = buildingPrefab.name;
+
+        GetComponent<Button>().onClick.AddListener(delegate { ObjectPlacement.instance.startObjectPlacement(buildingPrefab); });
     }
 
 

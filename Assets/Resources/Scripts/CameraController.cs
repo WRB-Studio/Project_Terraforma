@@ -48,8 +48,11 @@ public class CameraController : MonoBehaviour
 
     void LateUpdate()
     {
-        distance -= Input.GetAxis("Mouse ScrollWheel") * zoomSpeed;
-        distance = Mathf.Clamp(distance, minDistance, maxDistance);
+        if (Input.GetKey(KeyCode.LeftShift) == false)
+        {
+            distance -= Input.GetAxis("Mouse ScrollWheel") * zoomSpeed;
+            distance = Mathf.Clamp(distance, minDistance, maxDistance);
+        }
 
         if (target && Input.GetMouseButton(1))
         {

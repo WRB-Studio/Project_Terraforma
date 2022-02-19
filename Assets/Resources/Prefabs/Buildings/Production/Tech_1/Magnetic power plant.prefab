@@ -14,8 +14,8 @@ GameObject:
   - component: {fileID: 599996401328751920}
   - component: {fileID: 1945228766044862410}
   m_Layer: 0
-  m_Name: testBuilding
-  m_TagString: Untagged
+  m_Name: Magnetic power plant
+  m_TagString: Building
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -61,7 +61,7 @@ MeshRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 2100000, guid: 31321ba15b8f8eb4c954353edc038b1d, type: 2}
+  - {fileID: 2100000, guid: a6fa9d12a27ea9845b28c7bb53394e81, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -110,22 +110,26 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   buildingType: 1
   buildingCategory: 1
-  inUse: 0
-  canStandAlone: 0
-  isConnected: 0
-  oxygenAvailable: 0
-  gravityAvailable: 0
-  magneticFieldAvailable: 0
+  buildingTech: 1
   hitPoints: {x: 0, y: 0}
   realAVGStaticLoad: 3.25
   fictiveMaterialBonus: 1.25
   energy: {x: 0, y: 0}
   workplaces: {x: 0, y: 0}
   worplaceFactor: 1
+  inUse: 0
+  canStandAlone: 0
+  isConnected: 0
+  oxygenAvailable: 0
+  gravityAvailable: 0
+  magneticFieldAvailable: 0
   constructionRessourcesFactor: 0
   constructionTime: {x: 0, y: 0}
   constructionTimeFactor: 0
   buildingAltitude: 0
+  dragMode: 0
+  isColliding: 0
+  originMaterials: []
   housingUnits: 20
   satisfaction: 0
   isCapital: 0
