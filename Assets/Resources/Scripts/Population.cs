@@ -8,26 +8,18 @@ public class Population : MonoBehaviour
     public long totalPopulation;
 
     [Header("Population habitat infos")]
-    public long totalPopulationOutOfHabitat;
     public long totalPopulationInHabitat;
 
     [Header("Birth infos")]
     public int oneBirthPer = 1000;
-    public long totalBirthsPerSecond;
+    public double totalBirthsPerSecond;
 
-    [Header("Apartment infos")]
-    public long totalApartmentUnits;
-    public long totalOccupiedApartmentUnits;
-    public long totalFreeApartmentUnits;
+    [Header("Housing unit infos")]
+    public long totalHousingUnits;
 
-    [Header("Homeless infos")]
-    public long totalHomelessPopulation;
-    public long totalHomelessLivingSpace;
-
-    [Header("Job infos")]
+    [Header("Workplace infos")]
     public long totalWorkplaces;
     public long totalEmployed;
-    public long totalUnemployed;
 
     [Header("Satisfaction infos")]
     public float totalSatisfaction;
@@ -44,7 +36,7 @@ public class Population : MonoBehaviour
 
     public static void init()
     {
-
+        
     }
 
 
@@ -52,121 +44,56 @@ public class Population : MonoBehaviour
     {
         percent = Math.Abs(percent);
 
-        long populationToKill = (long)(totalPopulationOutOfHabitat / 100 * percent);
+        long populationToKill = (long)(Math.Abs(totalPopulationInHabitat - totalPopulation) / 100 * percent);
         if (populationToKill == 0)
             populationToKill = 1;
 
-        totalPopulationOutOfHabitat -= populationToKill;
+        removePopulation(populationToKill);
     }
 
     public static void updateCall()
     {
         instance.handleBirths();
 
-        instance.calculateHomeless();
-
-        instance.calculateEmployed();
-
         instance.handleSatisfaction();
+    }
+
+    public double calculateBirthPerSecond()
+    {
+        double satisfyedBirthPerThousend = oneBirthPer - (oneBirthPer / 100 * totalSatisfaction);
+        return Math.Round(totalPopulation / satisfyedBirthPerThousend, 2);
     }
 
     private void handleBirths()
     {
-        float satisfyedBirthPerThousend = oneBirthPer - (oneBirthPer / 100 * totalSatisfaction);
-        float totalBirthsPerSecondFloat = totalPopulation / satisfyedBirthPerThousend;
-        totalBirthsPerSecond = (long)totalBirthsPerSecondFloat;
+        totalBirthsPerSecond = calculateBirthPerSecond();
 
-        long newPopulation = totalBirthsPerSecond;
+        long newPopulation = (long)Math.Round(totalBirthsPerSecond, 0);
 
         //when birthsPerSecond larger 0 and smaller 1 birth random birth
-        if (totalBirthsPerSecondFloat < 1)
+        if (totalBirthsPerSecond < 1)
         {
-            if (totalBirthsPerSecondFloat > 0 && totalBirthsPerSecondFloat < 1 && UnityEngine.Random.value <= totalBirthsPerSecondFloat)
+            if (totalBirthsPerSecond > 0 && totalBirthsPerSecond < 1 && UnityEngine.Random.value <= totalBirthsPerSecond)
             {
                 newPopulation = 1;
             }
         }
 
-        if (totalFreeApartmentUnits > 0)
+        if (getFreeHousingUnits() > 0)
         {
             if (newPopulation > 1)
             {
-                totalPopulation += (int)UnityEngine.Random.Range(newPopulation - (newPopulation / 4), newPopulation);
-                //totalHomelessPopulation += newPopulation;
-                //totalUnemployed += newPopulation;
+                addPopulation((long)UnityEngine.Random.Range(newPopulation - (newPopulation / 4), newPopulation));
             }
             else if (UnityEngine.Random.value <= 0.75f)
             {
-                totalPopulation += newPopulation;
-                //totalHomelessPopulation += newPopulation;
-                //totalUnemployed += newPopulation;
+                addPopulation(newPopulation);
             }
         }
-    }
-
-    private void calculateHomeless()
-    {
-/*
-        //calculate homeless population
-        if (totalPopulation > totalApartmentUnits)
-        {
-            totalHomelessPopulation = totalPopulation - totalApartmentUnits;
-        }
-
-        //fill empty apartment units with homeless population
-        totalFreeApartmentUnits = totalApartmentUnits - totalOccupiedApartmentUnits;
-        if (totalFreeApartmentUnits > 0 && totalHomelessPopulation > 0)
-        {
-            long populationForApartments = 0;
-
-            if(totalFreeApartmentUnits > totalHomelessPopulation)
-            {
-                populationForApartments = totalFreeApartmentUnits - totalHomelessPopulation;
-            }
-            else if(totalFreeApartmentUnits < totalHomelessPopulation || totalFreeApartmentUnits == totalHomelessPopulation)
-            {
-                populationForApartments = totalFreeApartmentUnits;
-            }
-
-            totalHomelessPopulation -= populationForApartments;
-            totalOccupiedApartmentUnits += populationForApartments;
-            totalFreeApartmentUnits -= populationForApartments;
-        }
-*/
-    }
-
-    private void calculateEmployed()
-    {
-        /*
-        //calculate employedpopulation
-        if (totalPopulation > totalJobs)
-        {
-            totalUnemployed = totalPopulation - totalJobs;
-        }
-
-        //fill free jobs with unemployed population
-        long freeJobs = totalJobs - totalEmployed;
-        if (freeJobs > 0 && totalUnemployed > 0)
-        {
-            long populationForJobs = 0;
-
-            if (freeJobs > totalUnemployed)
-            {
-                populationForJobs = freeJobs - totalUnemployed;
-            }
-            else if (freeJobs < totalUnemployed || freeJobs == totalUnemployed)
-            {
-                populationForJobs = freeJobs;
-            }
-
-            totalUnemployed -= populationForJobs;
-            totalJobs -= populationForJobs;
-        }
-        */
     }
 
     private void handleSatisfaction()
-    {        
+    {
         float satisfactionByHomelessPopulation = 0;
         float satisfactionByUnemployedPopulation = 0;
         /*
@@ -178,4 +105,131 @@ public class Population : MonoBehaviour
         */
         totalSatisfaction = Mathf.Clamp(satisfactionByHomelessPopulation + satisfactionByUnemployedPopulation, -99, 99);
     }
+
+
+
+    public void addPopulation(long newIndividuals)
+    {
+        totalPopulation += newIndividuals;
+
+        fillHousingUnits(newIndividuals);
+        fillWorkplaces(newIndividuals);
+    }
+
+    public void removePopulation(long populationToKill)
+    {
+        Debug.LogWarning("removing people is not implemented");
+    }
+
+    public void addHousingUnits(long newHousingUnits)
+    {
+        totalHousingUnits += newHousingUnits;
+
+        fillHousingUnits(getHomelessPopulation());
+    }
+
+    public void addWorkplaces(long newWorkplaces)
+    {
+        totalWorkplaces += newWorkplaces;
+
+        fillWorkplaces(getUnemployedPopulation());
+    }
+
+
+    public long fillHousingUnits(long individuals)
+    {
+        if (individuals == 0)
+        {
+            return 0;
+        }
+
+        long rest = 0;
+        long individualsForMoving;
+        long freeHousingUnits;
+
+        for (int i = 0; i < Building.allBuilding.Count; i++)
+        {
+            if (Building.allBuilding[i].GetComponent<PopulationBuilding>())
+            {
+                PopulationBuilding currentBuilding = Building.allBuilding[i].GetComponent<PopulationBuilding>();
+
+                freeHousingUnits = currentBuilding.maxHousingUnits - currentBuilding.occupidHousingUnits;
+                if (freeHousingUnits > 0)
+                {
+                    rest = Math.Abs(freeHousingUnits - individuals);
+                    individualsForMoving = individuals - rest;
+                    currentBuilding.occupidHousingUnits += individualsForMoving;
+
+                    individuals = rest;
+                }
+            }
+        }
+
+        return rest;
+    }
+
+    public long fillWorkplaces(long individuals)
+    {
+        if (individuals == 0)
+        {
+            return 0;
+        }
+
+        long rest = 0;
+        long individualsForWorkplace;
+        long freeWorkplaces = getFreeWorkplaces();
+
+        if (freeWorkplaces > 0)
+        {
+            rest = Math.Abs(freeWorkplaces - individuals);
+            individualsForWorkplace = individuals - rest;
+            totalEmployed += individualsForWorkplace;
+        }
+
+        return rest;
+    }
+
+
+    public long getFreeHousingUnits()
+    {
+        if(totalPopulation < totalHousingUnits)
+        {
+            return totalHousingUnits - totalPopulation;
+        }
+
+        return 0;
+    }
+
+    public long getFreeWorkplaces()
+    {
+        if (totalPopulation < totalWorkplaces)
+            return Math.Abs(totalWorkplaces - totalPopulation);
+
+        return 0;
+    }
+
+    public long getUnemployedPopulation()
+    {
+        if (totalPopulation > totalEmployed)
+            return Math.Abs(totalEmployed - totalPopulation);
+
+        return 0;
+    }
+
+    public long getHomelessPopulation()
+    {
+        if(totalPopulation > totalHousingUnits)
+            return Math.Abs(totalHousingUnits - totalPopulation);
+
+        return 0;
+    }
+
+    public long getNotInHabitatPopulation()
+    {
+        if (totalPopulation > totalPopulationInHabitat)
+            return Math.Abs(totalPopulationInHabitat - totalPopulation);
+
+        return 0;
+    }
+
 }

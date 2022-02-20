@@ -26,7 +26,7 @@ public class PlanetAttributeGUIElement : MonoBehaviour, IPointerEnterHandler, IP
         if (planetAttributeScrp.planetAttribute == PlanetAttribute.ePlanetAttributes.Population)
         {
             sliderValue.minValue = 0;
-            sliderValue.maxValue = Population.instance.totalApartmentUnits + Population.instance.totalHomelessLivingSpace;
+            sliderValue.maxValue = Population.instance.totalHousingUnits;
             sliderValue.value = Population.instance.totalPopulation;
             txtMinValue.text = sliderValue.minValue.ToString();
             txtMaxValue.text = sliderValue.maxValue.ToString();
@@ -55,11 +55,11 @@ public class PlanetAttributeGUIElement : MonoBehaviour, IPointerEnterHandler, IP
             txtCurrentValue.text = Population.instance.totalPopulation.ToString();
             setTrendForPopulation(Population.instance.totalBirthsPerSecond);
 
-            sliderValue.maxValue = Population.instance.totalApartmentUnits + Population.instance.totalHomelessLivingSpace;
+            sliderValue.maxValue = Population.instance.totalHousingUnits;
             txtMaxValue.text = sliderValue.maxValue.ToString();
 
             //celsius
-            txtCurrentValue.text = "Total: " + Population.instance.totalPopulation + "\t\t In habitat: " + Population.instance.totalPopulationInHabitat + "\t\t Not in Habitat: " + Population.instance.totalPopulationOutOfHabitat;
+            txtCurrentValue.text = "Total: " + Population.instance.totalPopulation + "\t\t In habitat: " + Population.instance.totalPopulationInHabitat + "\t\t Not in Habitat: " + Population.instance.getNotInHabitatPopulation();
             setTrend(PlanetAttributeEffectHandler.getTrendAmountOf(planetAttributeScrp.planetAttribute));
         }
         else
@@ -104,7 +104,7 @@ public class PlanetAttributeGUIElement : MonoBehaviour, IPointerEnterHandler, IP
         }
     }
 
-    public void setTrendForPopulation(long trendValue)
+    public void setTrendForPopulation(double trendValue)
     {
         txtCurrentTrend.text = trendValue.ToString();
 

@@ -114,10 +114,11 @@ MonoBehaviour:
   hitPoints: {x: 0, y: 0}
   realAVGStaticLoad: 3.25
   fictiveMaterialBonus: 1.25
-  energy: {x: 0, y: 0}
+  neededEnergy: 0
   workplaces: {x: 0, y: 0}
-  inUse: 0
-  canStandAlone: 0
+  hasEnergy: 1
+  isActivated: 1
+  canStandAlone: 1
   isConnected: 0
   oxygenAvailable: 0
   gravityAvailable: 0
@@ -129,6 +130,7 @@ MonoBehaviour:
   inBuildMode: 0
   isColliding: 0
   originMaterials: []
-  housingUnits: 100
+  maxHousingUnits: 100
+  occupidHousingUnits: 0
   satisfaction: 0
   isCapital: 0

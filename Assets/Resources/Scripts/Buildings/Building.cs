@@ -30,14 +30,15 @@ public class Building : MonoBehaviour
     public float fictiveMaterialBonus = 1.25f; //fictive material bonus for building loads. (kN/m²)
 
     [Header("Needs")]
-    public Vector2Int energy;//arrive, needed
+    public int neededEnergy; //needed energy
 
     [Header("Workplaces")]
-    public Vector2Int workplaces; //occupied places, max places
+    public int workplaces;
     public static float workplaceFactor = 10;
 
     [Header("Some bools")]
-    public bool inUse;
+    public bool hasEnergy;
+    public bool isActivated;
     public bool canStandAlone;
     public bool isConnected;
     public bool oxygenAvailable;
@@ -56,7 +57,10 @@ public class Building : MonoBehaviour
     public bool inBuildMode;
     public bool isColliding;
     public Material[] originMaterials;
+
     public static List<Building> allBuilding = new List<Building>();
+
+
 
     private void Awake()
     {
@@ -82,12 +86,14 @@ public class Building : MonoBehaviour
     {
         //workplaces = Building volume * (building footprint (x * y) / 4) * worplaceFactor
         float result = (getVolumeOfBuilding(gameObject) * (getFloorSize(gameObject) / 4) * workplaceFactor);
+        /*
         Debug.Log("Volume =" + getVolumeOfBuilding(gameObject) + "\n" +
                   "Floor size = " + getFloorSize(gameObject) + " (/4 = "+ getFloorSize(gameObject) / 4 + ")\n" + 
                   "Workplacefactor = " + workplaceFactor + "\n" + 
                   "Volume * (Floor size / 4) * workplacefactor = " + result);
+        */
 
-        workplaces.y = (int)Math.Round(result, 0);
+        workplaces = (int)Math.Round(result, 0);
     }
 
     public void calculateEnergy()
@@ -160,9 +166,7 @@ public class Building : MonoBehaviour
 
             allBuilding.Add(this);
 
-            calculateWorkplaces();
-            Population.instance.totalWorkplaces += workplaces.y;
-
+            Population.instance.addWorkplaces(workplaces);
         }
     }
 

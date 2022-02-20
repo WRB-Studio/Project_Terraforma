@@ -5,8 +5,8 @@ using UnityEngine;
 
 public class PopulationBuilding : Building
 {
-    public long housingUnits;
-    public Tuple<long, long> housingUnits2; //occupid, max units+
+    public long maxHousingUnits;
+    public long occupidHousingUnits;
     public float satisfaction;
     public bool isCapital;
 
@@ -16,16 +16,12 @@ public class PopulationBuilding : Building
 
         if (!inBuildMode)
         {
-            Population.instance.totalApartmentUnits += housingUnits;
+            Population.instance.addHousingUnits(maxHousingUnits);
            
             if (name.Contains("Colony Ship"))
             {
-                Population.instance.totalPopulation += housingUnits;
-
+                Population.instance.addPopulation(maxHousingUnits);
             }
         }
-
-        
-
     }
 }
