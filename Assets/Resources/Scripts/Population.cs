@@ -113,7 +113,7 @@ public class Population : MonoBehaviour
         totalPopulation += newIndividuals;
 
         fillHousingUnits(newIndividuals);
-        fillWorkplaces(newIndividuals);
+        fillWorkplaces();
     }
 
     public void removePopulation(long populationToKill)
@@ -132,7 +132,7 @@ public class Population : MonoBehaviour
     {
         totalWorkplaces += newWorkplaces;
 
-        fillWorkplaces(getUnemployedPopulation());
+        fillWorkplaces();
     }
 
 
@@ -168,25 +168,16 @@ public class Population : MonoBehaviour
         return rest;
     }
 
-    public long fillWorkplaces(long individuals)
+    public void fillWorkplaces()
     {
-        if (individuals == 0)
+        if(totalPopulation >= totalWorkplaces)
         {
-            return 0;
+            totalEmployed = totalWorkplaces;
         }
-
-        long rest = 0;
-        long individualsForWorkplace;
-        long freeWorkplaces = getFreeWorkplaces();
-
-        if (freeWorkplaces > 0)
+        else if (totalPopulation < totalWorkplaces)
         {
-            rest = Math.Abs(freeWorkplaces - individuals);
-            individualsForWorkplace = individuals - rest;
-            totalEmployed += individualsForWorkplace;
+            totalEmployed = totalPopulation;
         }
-
-        return rest;
     }
 
 
@@ -200,18 +191,14 @@ public class Population : MonoBehaviour
         return 0;
     }
 
-    public long getFreeWorkplaces()
-    {
-        if (totalPopulation < totalWorkplaces)
-            return Math.Abs(totalWorkplaces - totalPopulation);
-
-        return 0;
-    }
-
     public long getUnemployedPopulation()
     {
-        if (totalPopulation > totalEmployed)
-            return Math.Abs(totalEmployed - totalPopulation);
+        long unemployed = totalWorkplaces - totalPopulation;
+
+        if (unemployed < 0)
+        {
+            return Math.Abs(unemployed);
+        }
 
         return 0;
     }

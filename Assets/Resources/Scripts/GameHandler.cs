@@ -40,7 +40,7 @@ public class GameHandler : MonoBehaviour
         Population.init();
 
         GUIHandler.init();
-        RessourceHandler.init();
+        ResourceHandler.init();
         PauseMenu.init();
 
         isInit = true;

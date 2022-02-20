@@ -29,6 +29,17 @@ public class Building : MonoBehaviour
     public float realAVGStaticLoad = 3.25f; //Average calculations of real building loads. (kN/m²)
     public float fictiveMaterialBonus = 1.25f; //fictive material bonus for building loads. (kN/m²)
 
+    [Header("Population")]
+    public long maxHousingUnits;
+    public long occupidHousingUnits;
+    public bool isCapital;
+
+    [Header("Production")]
+    public int storage;
+    public float Productivity;
+    public List<ResourcePairInfo> productionResources; //the production products
+    public List<ResourcePairInfo> manufacturingResources; //needed products for production
+
     [Header("Needs")]
     public int neededEnergy; //needed energy
 
@@ -46,7 +57,7 @@ public class Building : MonoBehaviour
     public bool magneticFieldAvailable;
 
     [Header("Construction")]
-    public Tuple<int, RessourceHandler.eRessources> constructionRessources;
+    public Tuple<int, ResourceHandler.eResources> constructionRessources;
     public float constructionRessourcesFactor;
     public Vector2 constructionTime;//countdown, max time
     public float constructionTimeFactor;
@@ -56,7 +67,7 @@ public class Building : MonoBehaviour
     //Build mode
     public bool inBuildMode;
     public bool isColliding;
-    public Material[] originMaterials;
+    private Material[] originMaterials;
 
     public static List<Building> allBuilding = new List<Building>();
 
@@ -85,7 +96,10 @@ public class Building : MonoBehaviour
     public void calculateWorkplaces()
     {
         //workplaces = Building volume * (building footprint (x * y) / 4) * worplaceFactor
-        float result = (getVolumeOfBuilding(gameObject) * (getFloorSize(gameObject) / 4) * workplaceFactor);
+        float result = 0;
+        if (workplaces != -1)
+            result = (getVolumeOfBuilding(gameObject) * (getFloorSize(gameObject) / 4) * workplaceFactor);
+
         /*
         Debug.Log("Volume =" + getVolumeOfBuilding(gameObject) + "\n" +
                   "Floor size = " + getFloorSize(gameObject) + " (/4 = "+ getFloorSize(gameObject) / 4 + ")\n" + 
@@ -96,11 +110,50 @@ public class Building : MonoBehaviour
         workplaces = (int)Math.Round(result, 0);
     }
 
-    public void calculateEnergy()
+    public void calculateProductivity()
     {
-        //default energy consum = people * flat rate energy consum for private people 5.5 kWh
+        //Hitpoints-%, Satisfaction, occupied worplaces-%
+    }
 
+    public void calculateNeededEnergy()
+    {
+        //population building energy consum = people * flat rate energy consum for private people 5.5 kWh
         //other building energy consum = default energy consum + building footprint (x * y) * flat rate energy consum for other buildings (25 kWh)
+        int energyConsumeByWorkplace = Mathf.RoundToInt(workplaces * 2.5f);
+        int energyConsumeByHousingUnit = Mathf.RoundToInt(maxHousingUnits * 5.5f);
+        int energyConsumMining = 20;
+        int energyConsumProduction = 25;
+        int energyConsumSpecial = 30;
+        int energyConsumTerraforming = 40;
+        int energyConsumDefense = 50;
+        int buildingFloorSize = Mathf.RoundToInt(getFloorSize(gameObject));
+
+        switch (buildingCategory)
+        {
+            case eBuildingCategory.None:
+                break;
+            case eBuildingCategory.Population:
+                neededEnergy = Mathf.RoundToInt(energyConsumeByHousingUnit);
+                break;
+            case eBuildingCategory.Mining:
+                neededEnergy = Mathf.RoundToInt(energyConsumeByWorkplace + buildingFloorSize * energyConsumMining);
+                break;
+            case eBuildingCategory.Production:
+                neededEnergy = Mathf.RoundToInt(energyConsumeByWorkplace + buildingFloorSize * energyConsumProduction);
+                break;
+            case eBuildingCategory.Special:
+                neededEnergy = Mathf.RoundToInt(energyConsumeByWorkplace + buildingFloorSize * energyConsumSpecial);
+                break;
+            case eBuildingCategory.Defense:
+                neededEnergy = Mathf.RoundToInt(energyConsumeByWorkplace + buildingFloorSize * energyConsumDefense);
+                break;
+            case eBuildingCategory.Terraforming:
+                neededEnergy = Mathf.RoundToInt(energyConsumeByWorkplace + buildingFloorSize * energyConsumTerraforming);
+                break;
+            default:
+                break;
+        }
+
     }
 
     public void checkDestroyingBuilding()
@@ -153,7 +206,7 @@ public class Building : MonoBehaviour
             Rigidbody rb = gameObject.AddComponent<Rigidbody>();
             rb.useGravity = false;
             rb.freezeRotation = true;
-  
+
             isBuildable();
         }
         else
@@ -166,7 +219,48 @@ public class Building : MonoBehaviour
 
             allBuilding.Add(this);
 
-            Population.instance.addWorkplaces(workplaces);
+            //add storage
+            ResourceHandler.addStorage(storage);
+
+            //if building is a power plant
+            if (productionResources.Count > 0 && productionResources[0].resourceType == ResourceHandler.eResources.totalEnergy)
+            {
+                ResourceHandler.addResource(productionResources[0]);
+            }
+            else
+            {
+                calculateNeededEnergy();
+                ResourceHandler.addResource(new ResourcePairInfo(ResourceHandler.eResources.energyConsume, neededEnergy));
+            }
+
+            //Check building gets energy 
+            int energy = ResourceHandler.getRessourceType(ResourceHandler.eResources.totalEnergy).Item2;
+            int energyConsume = ResourceHandler.getRessourceType(ResourceHandler.eResources.energyConsume).Item2;
+            if (energyConsume > energy)
+            {
+                hasEnergy = false;
+            }
+            else
+            {
+                hasEnergy = true;
+            }
+
+            //add housing units
+            Population.instance.addHousingUnits(maxHousingUnits);
+
+            //add population when colony ship
+            if (name.Contains("Colony Ship"))
+            {
+                Population.instance.addPopulation(maxHousingUnits);
+            }
+
+            //calculate/add worlplaces
+            if (workplaces != -1)
+            {
+                calculateWorkplaces();
+                Population.instance.addWorkplaces(workplaces);
+            }
+
         }
     }
 

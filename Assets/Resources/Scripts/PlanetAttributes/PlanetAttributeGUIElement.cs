@@ -17,9 +17,11 @@ public class PlanetAttributeGUIElement : MonoBehaviour, IPointerEnterHandler, IP
     public Text txtMaxValue;
     public PlanetAttribute planetAttributeScrp;
 
-    public void init(PlanetAttribute planetAttributeScrpVal)
+    public void init(PlanetAttribute planetAttributeScrpVal, Sprite symbolVal)
     {
         planetAttributeScrp = planetAttributeScrpVal;
+
+        imgSymbol.sprite = symbolVal;
 
         txtTitle.text = planetAttributeScrpVal.planetAttribute.ToString();
 
@@ -58,8 +60,22 @@ public class PlanetAttributeGUIElement : MonoBehaviour, IPointerEnterHandler, IP
             sliderValue.maxValue = Population.instance.totalHousingUnits;
             txtMaxValue.text = sliderValue.maxValue.ToString();
 
-            //celsius
-            txtCurrentValue.text = "Total: " + Population.instance.totalPopulation + "\t\t In habitat: " + Population.instance.totalPopulationInHabitat + "\t\t Not in Habitat: " + Population.instance.getNotInHabitatPopulation();
+            /*
+             population
+             in Habitat 
+             not in habitat
+             birthrate
+             housing units
+             homeless
+             worplaces
+             employed
+             unemployed
+             */
+            txtCurrentValue.text = "Total: " + Population.instance.totalPopulation + 
+                                   "\t\tBirthrate: " + Population.instance.totalBirthsPerSecond + 
+                                   "\t\tHomeless: " + Population.instance.getHomelessPopulation() + 
+                                   "\t\tWorkplaces: " + Population.instance.totalEmployed + "/" + Population.instance.totalWorkplaces +
+                                   "\t\tunemployed: " + Population.instance.getUnemployedPopulation();
             setTrend(PlanetAttributeEffectHandler.getTrendAmountOf(planetAttributeScrp.planetAttribute));
         }
         else

@@ -12,7 +12,7 @@ GameObject:
   - component: {fileID: 599996401328751926}
   - component: {fileID: 599996401328751921}
   - component: {fileID: 599996401328751920}
-  - component: {fileID: 1945228766044862410}
+  - component: {fileID: -5884970371182580737}
   m_Layer: 0
   m_Name: Magnetic power plant
   m_TagString: Building
@@ -96,7 +96,7 @@ BoxCollider:
   serializedVersion: 2
   m_Size: {x: 1, y: 1, z: 1}
   m_Center: {x: 0, y: 0, z: 0}
---- !u!114 &1945228766044862410
+--- !u!114 &-5884970371182580737
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -105,19 +105,19 @@ MonoBehaviour:
   m_GameObject: {fileID: 599996401328751922}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: b1f0bf05641a5d844bb554bafa19e1e9, type: 3}
+  m_Script: {fileID: 11500000, guid: ab9cba1d63db1304dbf990ac1be7bc02, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   buildingType: 1
-  buildingCategory: 1
+  buildingCategory: 3
   buildingTech: 1
   hitPoints: {x: 0, y: 0}
   realAVGStaticLoad: 3.25
   fictiveMaterialBonus: 1.25
-  energy: {x: 0, y: 0}
-  workplaces: {x: 0, y: 0}
-  worplaceFactor: 1
-  inUse: 0
+  neededEnergy: 0
+  workplaces: 0
+  hasEnergy: 0
+  isActivated: 0
   canStandAlone: 0
   isConnected: 0
   oxygenAvailable: 0
@@ -127,9 +127,7 @@ MonoBehaviour:
   constructionTime: {x: 0, y: 0}
   constructionTimeFactor: 0
   buildingAltitude: 0
-  dragMode: 0
+  inBuildMode: 0
   isColliding: 0
   originMaterials: []
-  housingUnits: 20
-  satisfaction: 0
-  isCapital: 0
+  Productivity: 0

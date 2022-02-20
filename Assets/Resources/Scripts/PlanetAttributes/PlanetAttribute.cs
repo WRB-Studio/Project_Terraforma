@@ -71,8 +71,16 @@ public class PlanetAttribute : MonoBehaviour
                 continue;
             }
 
+            Sprite[] symbols = Resources.LoadAll<Sprite>("Sprites/Symbols/Terraforming");
+            Sprite currentSymbol = null;
+            for (int x = 0; x < symbols.Length; x++)
+            {
+                if (symbols[x].name == curPlanetAttribute.planetAttribute.ToString())
+                    currentSymbol = symbols[x];
+            }
+
             PlanetAttributeGUIElement newElement = Instantiate(GUIHandler.instance.planetAttributeGUIElementPrefab, GUIHandler.instance.planetAttributeGUIParent.transform).GetComponent<PlanetAttributeGUIElement>();
-            newElement.init(curPlanetAttribute);
+            newElement.init(curPlanetAttribute, currentSymbol);
             curPlanetAttribute.planetAttributeGUIElement = newElement;
         }
 

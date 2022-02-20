@@ -18,7 +18,7 @@ public class SaveAndLoad : MonoBehaviour
     {
         PlanetAttribute.save();
         PlanetAttributeEffectHandler.save();
-        RessourceHandler.save();
+        ResourceHandler.save();
         CameraController.save();
         GameHandler.save();
         GUIHandler.save();
@@ -30,7 +30,7 @@ public class SaveAndLoad : MonoBehaviour
     {
         PlanetAttribute.load();
         PlanetAttributeEffectHandler.load();
-        RessourceHandler.load();
+        ResourceHandler.load();
         CameraController.load();
         GameHandler.load();
         GUIHandler.load();

@@ -22,7 +22,7 @@ public class ObjectPlacement : MonoBehaviour
 
     private IEnumerator dragAndPlacementCoroutine()
     {
-        float placeableCountdown = 0.5f;
+        float placeableCountdown = 0.25f;
 
         while (currentDragObject != null)
         {
