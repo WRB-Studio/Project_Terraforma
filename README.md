@@ -4,7 +4,7 @@ Various buildings are available for this purpose, which take care of resource mi
 development of a society, defense, research, production and terraforming of the planet.<br>
 <br>
 State:<br>
-In progress since January 2022 at a very early phase of development.<br>
+In progress since January 2022 at a very early phase of development.<br><br>
 ![Screen_02](https://user-images.githubusercontent.com/32596430/155415400-46c608d5-b68f-4182-a842-98fc6d934c18.png)
 
 
