@@ -7,5 +7,6 @@ development of a society, defense, research, production and terraforming of the 
 State:
 In progress since January 2022
 
-![alt text](https://i.pinimg.com/564x/07/1b/9d/071b9d36ecd1a4ebecd3704ea2fdeb69.jpg)
+![Screen_02](https://user-images.githubusercontent.com/32596430/155415400-46c608d5-b68f-4182-a842-98fc6d934c18.png)
+
 
