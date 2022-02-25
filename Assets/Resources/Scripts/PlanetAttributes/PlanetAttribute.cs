@@ -19,9 +19,14 @@ public class PlanetAttribute : MonoBehaviour
         Size
     }
 
+    public static Transform planetModell;
+    public static Transform watermodell;
+
     public static PlanetAttribute[] allPlanetAttributes;
 
     public ePlanetAttributes planetAttribute = ePlanetAttributes.None;
+
+    public static Vector2 minMaxPlanetHeight;
 
     public Vector2 currentAndTargetValue;
     public Vector2 minMaxValue;
@@ -55,6 +60,9 @@ public class PlanetAttribute : MonoBehaviour
 
         isInit = true;
 
+        planetModell = instance.transform.Find("PlanetModell");
+        watermodell = planetModell.transform.Find("WaterModell");
+
         allPlanetAttributes = instance.GetComponents<PlanetAttribute>();
 
         calculateAndSetTerraformingFactor();
@@ -84,6 +92,7 @@ public class PlanetAttribute : MonoBehaviour
             curPlanetAttribute.planetAttributeGUIElement = newElement;
         }
 
+        calculateMinMaxPlanetHeight();
     }
 
     public static void updateCall()
@@ -103,6 +112,28 @@ public class PlanetAttribute : MonoBehaviour
             planetAttribute.handleAttributes();
         }
 
+    }
+
+    public static void calculateMinMaxPlanetHeight()
+    {
+        Mesh mesh = planetModell.GetComponent<MeshFilter>().mesh;
+        Vector3[] vertices = mesh.vertices;
+
+        float minHeight = Mathf.Infinity;
+        float maxHeight = 0;
+        float currentDistance;
+
+        for (int i = 0; i < vertices.Length; i++)
+        {
+            currentDistance = Vector3.Distance(planetModell.position, planetModell.TransformVector(vertices[i]));
+            
+            if (currentDistance < minHeight)
+                minHeight = currentDistance;
+
+            if (currentDistance > maxHeight)
+                maxHeight = currentDistance;
+        }
+        minMaxPlanetHeight = new Vector2(minHeight, maxHeight);
     }
 
     public static PlanetAttribute getPlanetAttribute(ePlanetAttributes searchedPlanetAttribute)
@@ -723,10 +754,14 @@ public class PlanetAttribute : MonoBehaviour
         #endregion
 
         #region Water <=> Temperature
-        
-
+        //???
         #endregion
 
+
+        //water size
+        float currentWaterSize = watermodell.transform.localScale.x;
+
+        //watermodell.transform.localScale = 
     }
 
     private void biomassHandling()
@@ -738,7 +773,7 @@ public class PlanetAttribute : MonoBehaviour
         float currentVal = currentAndTargetValue.x;
         float currentValInPercent = getCurrentValueInPercent();
         float effectStrength = 0;
-        
+
         float currentBiomassInPercent = getPlanetAttribute(ePlanetAttributes.Biomass).getCurrentValueInPercent();
         PlanetAttributeEffect.eEffectReason reason = PlanetAttributeEffect.eEffectReason.None;
         float area = 50;
@@ -814,7 +849,7 @@ public class PlanetAttribute : MonoBehaviour
             long peopleToKill = (long)(currentVal / 100 * 0.05f); //kill 0,05% of people (per second)
 
             reason = PlanetAttributeEffect.eEffectReason.very_low_Temperature;
-            PlanetAttributeEffectHandler.createEffect(reason, ePlanetAttributes.Population, -peopleToKill, -1); 
+            PlanetAttributeEffectHandler.createEffect(reason, ePlanetAttributes.Population, -peopleToKill, -1);
         }
 
     }

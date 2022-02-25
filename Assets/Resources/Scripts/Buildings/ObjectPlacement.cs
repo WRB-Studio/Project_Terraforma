@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class ObjectPlacement : MonoBehaviour
 {
@@ -10,6 +11,8 @@ public class ObjectPlacement : MonoBehaviour
     public Color cantBuildColor;
     public Color canBuildColor;
 
+    public RectTransform heightPanel;
+
     public static ObjectPlacement instance;
 
 
@@ -17,6 +20,7 @@ public class ObjectPlacement : MonoBehaviour
     private void Awake()
     {
         instance = this;
+        showHideHeightPanel(false);
     }
 
 
@@ -61,6 +65,9 @@ public class ObjectPlacement : MonoBehaviour
                             currentDragObject = null;
                             break;
                         }
+
+                        showHideHeightPanel(true);
+                        heightPanelUpdate(hitCol.point);
                     }
                 }
 
@@ -69,8 +76,24 @@ public class ObjectPlacement : MonoBehaviour
                     Destroy(currentDragObject);
                     currentDragObject = null;
                 }
-            }
+            }                        
         }
+
+        showHideHeightPanel(false);
+    }
+
+    public void heightPanelUpdate(Vector3 worldPosition)
+    {
+        heightPanel.position = Camera.main.WorldToScreenPoint(worldPosition);
+        heightPanel.transform.GetChild(0).GetComponent<Text>().text = System.Math.Round((Vector3.Distance(PlanetAttribute.planetModell.position, worldPosition) - PlanetAttribute.minMaxPlanetHeight.x) * 100, 2).ToString();
+    }
+
+    private void showHideHeightPanel(bool show)
+    {
+        if (show)
+            heightPanel.gameObject.SetActive(true);
+        else
+            heightPanel.gameObject.SetActive(false);
     }
 
     public void startObjectPlacement(GameObject dragObject)

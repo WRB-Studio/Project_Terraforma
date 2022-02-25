@@ -80,7 +80,7 @@ public class Building : MonoBehaviour
 
     public void calculateBuildingAltitude()
     {
-        // = difference to smalles point
+        buildingAltitude = (float)Math.Round((Vector3.Distance(PlanetAttribute.planetModell.position, transform.position) - PlanetAttribute.minMaxPlanetHeight.x) * 100, 2);
     }
 
     public void calculateConstructionTime()
@@ -214,13 +214,13 @@ public class Building : MonoBehaviour
             inBuildMode = false;
 
             Destroy(GetComponent<Rigidbody>());
-
             GetComponent<MeshRenderer>().materials = originMaterials;
 
             allBuilding.Add(this);
 
-            //add storage
-            ResourceHandler.addStorage(storage);
+            calculateBuildingAltitude();//building height on planet
+
+            ResourceHandler.addStorage(storage);//add storage
 
             //if building is a power plant
             if (productionResources.Count > 0 && productionResources[0].resourceType == ResourceHandler.eResources.totalEnergy)
@@ -244,9 +244,8 @@ public class Building : MonoBehaviour
             {
                 hasEnergy = true;
             }
-
-            //add housing units
-            Population.instance.addHousingUnits(maxHousingUnits);
+                        
+            Population.instance.addHousingUnits(maxHousingUnits);//add housing units
 
             //add population when colony ship
             if (name.Contains("Colony Ship"))
@@ -260,7 +259,6 @@ public class Building : MonoBehaviour
                 calculateWorkplaces();
                 Population.instance.addWorkplaces(workplaces);
             }
-
         }
     }
 
@@ -322,4 +320,5 @@ public class Building : MonoBehaviour
 
         return (1.0f / 6.0f) * (-v321 + v231 + v312 - v132 - v213 + v123);
     }
+
 }
