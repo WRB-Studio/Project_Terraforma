@@ -756,10 +756,10 @@ public class PlanetAttribute : MonoBehaviour
         #region Water <=> Temperature
         //???
         #endregion
-
-
+        
         //water size
-        float currentWaterSize = watermodell.transform.localScale.x;
+        
+
 
         //watermodell.transform.localScale = 
     }
