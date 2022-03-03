@@ -72,6 +72,7 @@ public class PlanetAttribute : MonoBehaviour
         {
             PlanetAttribute curPlanetAttribute = allPlanetAttributes[i];
 
+            //set planet size
             if (curPlanetAttribute.planetAttribute == ePlanetAttributes.Size)
             {
                 curPlanetAttribute.currentAndTargetValue.x /= 100;
@@ -79,6 +80,7 @@ public class PlanetAttribute : MonoBehaviour
                 continue;
             }
 
+            //set symbol in Planet attribute UI
             Sprite[] symbols = Resources.LoadAll<Sprite>("Sprites/Symbols/Terraforming");
             Sprite currentSymbol = null;
             for (int x = 0; x < symbols.Length; x++)
@@ -87,6 +89,7 @@ public class PlanetAttribute : MonoBehaviour
                     currentSymbol = symbols[x];
             }
 
+            //create planet attribute gui element
             PlanetAttributeGUIElement newElement = Instantiate(GUIHandler.instance.planetAttributeGUIElementPrefab, GUIHandler.instance.planetAttributeGUIParent.transform).GetComponent<PlanetAttributeGUIElement>();
             newElement.init(curPlanetAttribute, currentSymbol);
             curPlanetAttribute.planetAttributeGUIElement = newElement;
@@ -126,7 +129,7 @@ public class PlanetAttribute : MonoBehaviour
         for (int i = 0; i < vertices.Length; i++)
         {
             currentDistance = Vector3.Distance(planetModell.position, planetModell.TransformVector(vertices[i]));
-            
+
             if (currentDistance < minHeight)
                 minHeight = currentDistance;
 
@@ -756,12 +759,13 @@ public class PlanetAttribute : MonoBehaviour
         #region Water <=> Temperature
         //???
         #endregion
-        
+
         //water size
-        
-
-
-        //watermodell.transform.localScale = 
+        float maxDifference = 0.025f;
+        Vector2 minMaxSize = new Vector2(1f - maxDifference, 1f + maxDifference);
+        area = minMaxSize.y - minMaxSize.x;
+        float newSize = area / 100 * getCurrentValueInPercent() + minMaxSize.x;
+        watermodell.transform.localScale = new Vector3(newSize, newSize, newSize);
     }
 
     private void biomassHandling()
@@ -807,6 +811,8 @@ public class PlanetAttribute : MonoBehaviour
             }
         }
         */
+
+        SpawnVegetation.instance.createTreesByPercentage(getCurrentValueInPercent());
     }
 
     public void populationHandling()

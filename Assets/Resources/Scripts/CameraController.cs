@@ -54,7 +54,7 @@ public class CameraController : MonoBehaviour
             distance = Mathf.Clamp(distance, minDistance, maxDistance);
         }
 
-        if (target && Input.GetMouseButton(1))
+        if (target && Input.GetMouseButton(0))
         {
             var pos = Input.mousePosition;
             var dpiScale = 1f;

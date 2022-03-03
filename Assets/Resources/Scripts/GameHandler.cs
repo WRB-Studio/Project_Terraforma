@@ -38,6 +38,7 @@ public class GameHandler : MonoBehaviour
         CameraController.init();
         SunHandler.init();
         Population.init();
+        SpawnVegetation.init();
 
         GUIHandler.init();
         ResourceHandler.init();
@@ -71,6 +72,8 @@ public class GameHandler : MonoBehaviour
             PlanetAttributeEffectHandler.updateCallPerSecond();
 
             Population.updateCall();
+
+            SpawnVegetation.updateCall();
         }
     }
 
