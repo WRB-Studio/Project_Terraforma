@@ -41,6 +41,7 @@ public class GameHandler : MonoBehaviour
         SpawnVegetation.init();
 
         GUIHandler.init();
+        BuildingMenu.init();
         ResourceHandler.init();
         PauseMenu.init();
 

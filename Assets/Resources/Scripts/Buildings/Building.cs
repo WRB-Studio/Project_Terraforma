@@ -17,12 +17,13 @@ public class Building : MonoBehaviour
 
     public enum eTechType
     {
-        None, DefaultTech, Tech_1, Tech_2, Tech_3,
+        None, Tech_1, Tech_2, Tech_3, Tech_4,
     }
 
     public eBuildingType buildingType = eBuildingType.None;
     public eBuildingCategory buildingCategory = eBuildingCategory.None;
     public eTechType buildingTech = eTechType.None;
+    public bool unlocked;
 
     [Header("Hitpoints")]
     public Vector2Int hitPoints;
