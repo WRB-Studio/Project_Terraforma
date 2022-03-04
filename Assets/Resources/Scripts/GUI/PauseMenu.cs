@@ -21,7 +21,7 @@ public class PauseMenu : GUIInterface
 
     public static void init()
     {
-        if (instance.guiPanel.activeSelf)
+        if (GUIHandler.instance.pauseMenuPanel.activeSelf)
             instance.showHideGUI();
 
         instance.btContinue.onClick.AddListener(delegate { onBtContinue(); });
@@ -59,15 +59,15 @@ public class PauseMenu : GUIInterface
 
     public override void showHideGUI()
     {
-        if (guiPanel.activeSelf)
+        if (GUIHandler.instance.pauseMenuPanel.activeSelf)
         {
-            guiPanel.SetActive(false);
-            GameHandler.setIsPause(false);
+            GUIHandler.instance.pauseMenuPanel.SetActive(false);
+            //GameHandler.setIsPause(false);
         }
         else
         {
-            guiPanel.SetActive(true);
-            GameHandler.setIsPause(true);
+            GUIHandler.instance.pauseMenuPanel.SetActive(true);
+            //GameHandler.setIsPause(true);
         }
     }
 }

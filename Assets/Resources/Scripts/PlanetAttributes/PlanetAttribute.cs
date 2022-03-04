@@ -90,7 +90,7 @@ public class PlanetAttribute : MonoBehaviour
             }
 
             //create planet attribute gui element
-            PlanetAttributeGUIElement newElement = Instantiate(GUIHandler.instance.planetAttributeGUIElementPrefab, GUIHandler.instance.planetAttributeGUIParent.transform).GetComponent<PlanetAttributeGUIElement>();
+            PlanetAttributeGUIElement newElement = Instantiate(GUIHandler.instance.planetAttributeGUIElementPrefab, GUIHandler.instance.planetAttributeElementParent.transform).GetComponent<PlanetAttributeGUIElement>();
             newElement.init(curPlanetAttribute, currentSymbol);
             curPlanetAttribute.planetAttributeGUIElement = newElement;
         }
@@ -868,11 +868,11 @@ public class PlanetAttribute : MonoBehaviour
 
     public static void save()
     {
-        throw new NotImplementedException();
+        Debug.Log("Saving ist not implemented!");
     }
 
     public static void load()
     {
-        throw new NotImplementedException();
+        Debug.Log("Loadeing ist not implemented!");
     }
 }

@@ -4,15 +4,15 @@ using UnityEngine;
 
 public class GUIInterface : MonoBehaviour
 {
-    public GameObject guiPanel;
-
-
-
     public virtual void showHideGUI()
     {
-        if (guiPanel.activeSelf)
-            guiPanel.SetActive(false);
+        if (gameObject.activeSelf)
+        {
+            gameObject.SetActive(false);
+        }
         else
-            guiPanel.SetActive(true);
+        {
+            gameObject.SetActive(true);
+        }
     }
 }

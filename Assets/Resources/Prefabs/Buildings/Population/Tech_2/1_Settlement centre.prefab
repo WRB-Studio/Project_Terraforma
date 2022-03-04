@@ -108,16 +108,17 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b1f0bf05641a5d844bb554bafa19e1e9, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  id: 3
   buildingType: 1
   buildingCategory: 1
   buildingTech: 2
+  unlocked: 0
   hitPoints: {x: 0, y: 0}
   realAVGStaticLoad: 3.25
   fictiveMaterialBonus: 1.25
   maxHousingUnits: 0
   occupidHousingUnits: 0
   isCapital: 0
+  isPopulationCentre: 1
   storage: 0
   Productivity: 0
   productionResources: []

@@ -32,7 +32,7 @@ public class PlanetAttributeEffectHandler : MonoBehaviour
         PlanetAttributeEffect newEffect = newEffectGO.AddComponent<PlanetAttributeEffect>();
         newEffect.initEffect(eEffectReasonVal, affectedAttributeVal, strengthVal, startDurationVal,
                              Instantiate(GUIHandler.instance.planetAttributeEffectGUIElementPrefab,
-                                         GUIHandler.instance.planetAttributeEffectGUIParent.transform).GetComponent<PlanetAttributeEffectGUIElement>());
+                                         GUIHandler.instance.planetAttributeEffectsParent.transform).GetComponent<PlanetAttributeEffectGUIElement>());
 
         currentEffects.Add(newEffect);
 
@@ -77,11 +77,11 @@ public class PlanetAttributeEffectHandler : MonoBehaviour
     {
         if (planetAttribute == PlanetAttribute.ePlanetAttributes.None)
         {
-            GUIHandler.instance.planetAttributeEffectGUIParent.SetActive(false);
+            GUIHandler.instance.planetAttributeEffectsParent.SetActive(false);
             return;
         }
 
-        GUIHandler.instance.planetAttributeEffectGUIParent.SetActive(true);
+        GUIHandler.instance.planetAttributeEffectsParent.SetActive(true);
 
         int count = 0;
 
@@ -97,7 +97,7 @@ public class PlanetAttributeEffectHandler : MonoBehaviour
         }
 
         if (count <= 0)
-            GUIHandler.instance.planetAttributeEffectGUIParent.SetActive(false);
+            GUIHandler.instance.planetAttributeEffectsParent.SetActive(false);
 
     }
 
@@ -124,11 +124,11 @@ public class PlanetAttributeEffectHandler : MonoBehaviour
 
     public static void save()
     {
-        throw new NotImplementedException();
+        Debug.Log("Saving ist not implemented!");
     }
 
     public static void load()
     {
-        throw new NotImplementedException();
+        Debug.Log("Loadeing ist not implemented!");
     }
 }

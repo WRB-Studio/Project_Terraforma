@@ -6,18 +6,21 @@ using UnityEngine.UI;
 
 public class GUIHandler : MonoBehaviour
 {
+    [Header("GUI main panel")]
+    public GameObject pauseMenuPanel;
+    public GameObject planetAttributesPanel;
+    public GameObject ressourcePanel;
+    public GameObject buildingMenuPanel;
+
     [Header("Planet attribute properties")]
-    public GameObject planetAttributeGUIParent;
+    public GameObject planetAttributeElementParent;
     public GameObject planetAttributeGUIElementPrefab;
+    public GameObject planetAttributeEffectsParent;
     public Text txtTerraformingFactor;
 
     [Header("Ressource GUI properties")]
-    public GameObject ressourceGUIParent;
     public Text txtStorage;
     public GameObject ressourceGUIElementPrefab;
-
-    [Header("Build menu GUI properties")]
-    public GameObject buildMenuGUIParent;
 
     [Header("Quick menu")]
     public Button btPlaySpeed;
@@ -26,7 +29,6 @@ public class GUIHandler : MonoBehaviour
     public Button btBuildMenue;
 
     [Header("Planet attribute effect properties")]
-    public GameObject planetAttributeEffectGUIParent;
     public GameObject planetAttributeEffectGUIElementPrefab;
 
 
@@ -48,13 +50,13 @@ public class GUIHandler : MonoBehaviour
     {
         instance.btPlaySpeed.onClick.AddListener(delegate { setNextPlaySpeed(); });
 
-        instance.btPlanetTerraforming.onClick.AddListener(delegate { showHide(planetAttributeGUIParent); });
-        instance.btRessources.onClick.AddListener(delegate { showHide(ressourceGUIParent); });
-        instance.btBuildMenue.onClick.AddListener(delegate { showHide(buildMenuGUIParent); });
+        instance.btPlanetTerraforming.onClick.AddListener(delegate { showHide(planetAttributesPanel); });
+        instance.btRessources.onClick.AddListener(delegate { showHide(ressourcePanel); });
+        instance.btBuildMenue.onClick.AddListener(delegate { BuildingChooser.instance.showHideGUI(); });
 
-        planetAttributeGUIParent.SetActive(false);
-        ressourceGUIParent.SetActive(false);
-        buildMenuGUIParent.SetActive(false);
+        planetAttributesPanel.SetActive(false);
+        ressourcePanel.SetActive(false);
+        buildingMenuPanel.SetActive(false);
     }
 
     public void showHide(GameObject guiObject)
@@ -71,21 +73,15 @@ public class GUIHandler : MonoBehaviour
 
     public static void setNextPlaySpeed()
     {
-        if (instance.btPlaySpeed.transform.GetChild(0).GetComponent<Text>().text == "||")
+        if (instance.btPlaySpeed.transform.GetChild(0).GetComponent<Text>().text == "| |")
         {
             setPlaySpeed(">");
-            if(GameHandler.isPause)
+            if (GameHandler.isPause) 
                 GameHandler.setIsPause(false);
         }
         else if (instance.btPlaySpeed.transform.GetChild(0).GetComponent<Text>().text == ">")
         {
-            setPlaySpeed(">>");
-            if (GameHandler.isPause) 
-                GameHandler.setIsPause(false);
-        }
-        else if (instance.btPlaySpeed.transform.GetChild(0).GetComponent<Text>().text == ">>")
-        {
-            setPlaySpeed("||");
+            setPlaySpeed("| |");
             if (!GameHandler.isPause) 
                 GameHandler.setIsPause(true);
         }
@@ -93,7 +89,7 @@ public class GUIHandler : MonoBehaviour
 
     public static void setPlaySpeed(string playSpeedSymbol)
     {
-        if(playSpeedSymbol == "||")
+        if(playSpeedSymbol == "| |")
         {
             instance.btPlaySpeed.transform.GetChild(0).GetComponent<Text>().text = playSpeedSymbol;
 
@@ -101,22 +97,16 @@ public class GUIHandler : MonoBehaviour
         else if (playSpeedSymbol == ">")
         {
             instance.btPlaySpeed.transform.GetChild(0).GetComponent<Text>().text = playSpeedSymbol;
-
-        }
-        else if (playSpeedSymbol == ">>")
-        {
-            instance.btPlaySpeed.transform.GetChild(0).GetComponent<Text>().text = playSpeedSymbol;
-
         }
     }
 
     public static void save()
     {
-        throw new NotImplementedException();
+        Debug.Log("Saving ist not implemented!");
     }
 
     public static void load()
     {
-        throw new NotImplementedException();
+        Debug.Log("Loadeing ist not implemented!");
     }
 }

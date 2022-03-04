@@ -25,11 +25,13 @@ public class GameHandler : MonoBehaviour
 
     private void Start()
     {
-        init();
+        StartCoroutine(initCoroutine());
     }
 
-    public void init()
+    private IEnumerator initCoroutine()
     {
+        yield return new WaitForSeconds(1);
+
         if (removeSaveGame)
             SaveAndLoad.removeSaveGame();
 
@@ -41,13 +43,14 @@ public class GameHandler : MonoBehaviour
         SpawnVegetation.init();
 
         GUIHandler.init();
-        BuildingMenu.init();
         ResourceHandler.init();
         PauseMenu.init();
+        BuildingHandler.init();
+        BuildingChooser.init();
+
 
         isInit = true;
     }
-
 
 
     private void Update()
@@ -58,7 +61,7 @@ public class GameHandler : MonoBehaviour
         PlanetAttribute.updateCall();
 
         if (Input.GetKeyDown(KeyCode.Escape))
-            PauseMenu.instance.showHideGUI();
+            GUIHandler.instance.showHide(GUIHandler.instance.pauseMenuPanel);
 
         updatePerSecond();
 
@@ -75,6 +78,8 @@ public class GameHandler : MonoBehaviour
             Population.updateCall();
 
             SpawnVegetation.updateCall();
+
+            BuildingHandler.udateCall();
         }
     }
 
@@ -103,11 +108,11 @@ public class GameHandler : MonoBehaviour
 
     public static void save()
     {
-        throw new NotImplementedException();
+        Debug.Log("Saving ist not implemented!");
     }
 
     public static void load()
     {
-        throw new NotImplementedException();
+        Debug.Log("Loadeing ist not implemented!");
     }
 }

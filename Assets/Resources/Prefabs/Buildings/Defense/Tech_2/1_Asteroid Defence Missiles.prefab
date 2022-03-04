@@ -110,7 +110,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   buildingType: 1
   buildingCategory: 5
-  buildingTech: 1
+  buildingTech: 2
   unlocked: 0
   hitPoints: {x: 0, y: 0}
   realAVGStaticLoad: 3.25

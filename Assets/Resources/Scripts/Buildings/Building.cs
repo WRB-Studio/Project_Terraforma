@@ -34,6 +34,7 @@ public class Building : MonoBehaviour
     public long maxHousingUnits;
     public long occupidHousingUnits;
     public bool isCapital;
+    public bool isPopulationCentre;
 
     [Header("Production")]
     public int storage;
@@ -70,14 +71,13 @@ public class Building : MonoBehaviour
     public bool isColliding;
     private Material[] originMaterials;
 
-    public static List<Building> allBuilding = new List<Building>();
-
 
 
     private void Awake()
     {
         originMaterials = GetComponent<MeshRenderer>().materials;
     }
+
 
     public void calculateBuildingAltitude()
     {
@@ -217,7 +217,7 @@ public class Building : MonoBehaviour
             Destroy(GetComponent<Rigidbody>());
             GetComponent<MeshRenderer>().materials = originMaterials;
 
-            allBuilding.Add(this);
+            BuildingHandler.allInstantiatedBuildings.Add(this);
 
             calculateBuildingAltitude();//building height on planet
 
@@ -260,6 +260,8 @@ public class Building : MonoBehaviour
                 calculateWorkplaces();
                 Population.instance.addWorkplaces(workplaces);
             }
+
+            BuildingChooser.instance.refreshBuildingChooser();
         }
     }
 

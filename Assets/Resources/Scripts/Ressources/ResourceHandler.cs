@@ -37,7 +37,7 @@ public class ResourceHandler : MonoBehaviour
         //generate ressources
         for (int i = 0; i < Enum.GetNames(typeof(eResources)).Length; i++)
         {
-            RessourcesGUIElement newResGUIElement = Instantiate(GUIHandler.instance.ressourceGUIElementPrefab, GUIHandler.instance.ressourceGUIParent.transform).GetComponent<RessourcesGUIElement>();
+            RessourcesGUIElement newResGUIElement = Instantiate(GUIHandler.instance.ressourceGUIElementPrefab, GUIHandler.instance.ressourcePanel.transform).GetComponent<RessourcesGUIElement>();
             ressourceType.Add(new Tuple<eResources, int, RessourcesGUIElement>((eResources)i, 0, newResGUIElement));
             newResGUIElement.itemName.text = ((eResources)i).ToString();
             newResGUIElement.currentValue.text = "0";
@@ -108,11 +108,11 @@ public class ResourceHandler : MonoBehaviour
 
     public static void save()
     {
-        throw new NotImplementedException();
+        Debug.Log("Saving ist not implemented!");
     }
 
     public static void load()
     {
-        throw new NotImplementedException();
+        Debug.Log("Loadeing ist not implemented!");
     }
 }

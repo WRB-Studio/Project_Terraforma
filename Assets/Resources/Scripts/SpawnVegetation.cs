@@ -87,7 +87,7 @@ public class SpawnVegetation : MonoBehaviour
     public void createTreesByPercentage(float percentage)
     {
         int amount = Mathf.RoundToInt(maxNatureObjects / 100 * percentage);
-        Debug.Log(amount);
+
         while (instantiatedNatureObjects.Count < amount)
         {
             instantiateTree();
@@ -113,11 +113,11 @@ public class SpawnVegetation : MonoBehaviour
 
     public static void save()
     {
-        throw new NotImplementedException();
+        Debug.Log("Saving ist not implemented!");
     }
 
     public static void load()
     {
-        throw new NotImplementedException();
+        Debug.Log("Loadeing ist not implemented!");
     }
 }

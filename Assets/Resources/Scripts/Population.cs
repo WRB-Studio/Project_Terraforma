@@ -147,11 +147,11 @@ public class Population : MonoBehaviour
         long individualsForMoving;
         long freeHousingUnits;
 
-        for (int i = 0; i < Building.allBuilding.Count; i++)
+        for (int i = 0; i < BuildingHandler.allInstantiatedBuildings.Count; i++)
         {
-            if (Building.allBuilding[i].GetComponent<PopulationBuilding>())
+            if (BuildingHandler.allInstantiatedBuildings[i].GetComponent<PopulationBuilding>())
             {
-                PopulationBuilding currentBuilding = Building.allBuilding[i].GetComponent<PopulationBuilding>();
+                PopulationBuilding currentBuilding = BuildingHandler.allInstantiatedBuildings[i].GetComponent<PopulationBuilding>();
 
                 freeHousingUnits = currentBuilding.maxHousingUnits - currentBuilding.occupidHousingUnits;
                 if (freeHousingUnits > 0)
