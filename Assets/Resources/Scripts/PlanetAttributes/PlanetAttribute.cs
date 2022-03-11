@@ -819,7 +819,7 @@ public class PlanetAttribute : MonoBehaviour
     {
         //Population low =>
         //Population high => Oxygen-, Air Pressure+, Temperature+, Population+
-        long currentVal = Population.instance.totalPopulation;
+        long currentVal = PopulationHandler.Population;
         float effectStrength = 0;
         PlanetAttributeEffect.eEffectReason reason = PlanetAttributeEffect.eEffectReason.None;
 

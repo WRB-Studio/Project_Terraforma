@@ -28,8 +28,8 @@ public class PlanetAttributeGUIElement : MonoBehaviour, IPointerEnterHandler, IP
         if (planetAttributeScrp.planetAttribute == PlanetAttribute.ePlanetAttributes.Population)
         {
             sliderValue.minValue = 0;
-            sliderValue.maxValue = Population.instance.totalHousingUnits;
-            sliderValue.value = Population.instance.totalPopulation;
+            sliderValue.maxValue = PopulationHandler.HousingUnits;
+            sliderValue.value = PopulationHandler.Population;
             txtMinValue.text = sliderValue.minValue.ToString();
             txtMaxValue.text = sliderValue.maxValue.ToString();
             txtCurrentValue.text = sliderValue.value.ToString("f2");
@@ -52,12 +52,12 @@ public class PlanetAttributeGUIElement : MonoBehaviour, IPointerEnterHandler, IP
     {
         if (planetAttributeScrp.planetAttribute == PlanetAttribute.ePlanetAttributes.Population)
         {
-            sliderValue.value = Population.instance.totalPopulation;
+            sliderValue.value = PopulationHandler.Population;
 
-            txtCurrentValue.text = Population.instance.totalPopulation.ToString();
-            setTrendForPopulation(Population.instance.totalBirthsPerSecond);
+            txtCurrentValue.text = PopulationHandler.Population.ToString();
+            setTrendForPopulation(PopulationHandler.getBirthratePerThousend());
 
-            sliderValue.maxValue = Population.instance.totalHousingUnits;
+            sliderValue.maxValue = PopulationHandler.HousingUnits;
             txtMaxValue.text = sliderValue.maxValue.ToString();
 
             /*
@@ -71,11 +71,11 @@ public class PlanetAttributeGUIElement : MonoBehaviour, IPointerEnterHandler, IP
              employed
              unemployed
              */
-            txtCurrentValue.text = "Total: " + Population.instance.totalPopulation + 
-                                   "\t\tBirthrate: " + Population.instance.totalBirthsPerSecond + 
-                                   "\t\tHomeless: " + Population.instance.getHomelessPopulation() + 
-                                   "\t\tWorkplaces: " + Population.instance.totalEmployed + "/" + Population.instance.totalWorkplaces +
-                                   "\t\tunemployed: " + Population.instance.getUnemployedPopulation();
+            txtCurrentValue.text = "Total: " + PopulationHandler.Population + 
+                                   "\t\tBirthrate: " + PopulationHandler.getBirthratePerThousend() + 
+                                   "\t\tHomeless: " + PopulationHandler.getHomeless() + 
+                                   "\t\tWorkplaces: " + PopulationHandler.getEmployed() + "/" + PopulationHandler.Workplaces +
+                                   "\t\tunemployed: " + PopulationHandler.getUnemployed();
             setTrend(PlanetAttributeEffectHandler.getTrendAmountOf(planetAttributeScrp.planetAttribute));
         }
         else

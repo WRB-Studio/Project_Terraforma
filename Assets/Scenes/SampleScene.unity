@@ -12042,7 +12042,7 @@ GameObject:
   - component: {fileID: 1985986138}
   - component: {fileID: 1985986139}
   m_Layer: 0
-  m_Name: Population
+  m_Name: PopulationHandler
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -12074,14 +12074,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e8586240ce83404499d2d9665a5872a4, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  totalPopulation: 0
-  totalPopulationInHabitat: 0
-  oneBirthPer: 1000
-  totalBirthsPerSecond: 0
-  totalHousingUnits: 0
-  totalWorkplaces: 0
-  totalEmployed: 0
-  totalSatisfaction: 0
+  defaultBirthsPerThousend: 0.1
 --- !u!1001 &2025843322
 PrefabInstance:
   m_ObjectHideFlags: 0

@@ -111,22 +111,27 @@ MonoBehaviour:
   buildingType: 1
   buildingCategory: 3
   buildingTech: 1
+  unlocked: 0
   hitPoints: {x: 0, y: 0}
   realAVGStaticLoad: 3.25
   fictiveMaterialBonus: 1.25
   maxHousingUnits: 0
-  occupidHousingUnits: 0
   isCapital: 0
+  isPopulationCentre: 0
   storage: 0
+  energy_Production_Consuming: 0
   Productivity: 0
+  productionItem:
+    output: []
+    input: []
   productionResources: []
   manufacturingResources: []
-  neededEnergy: 0
   workplaces: 0
-  hasEnergy: 0
   isActivated: 0
+  hasEnergy: 0
   canStandAlone: 0
   isConnected: 0
+  isInHabitat: 0
   oxygenAvailable: 0
   gravityAvailable: 0
   magneticFieldAvailable: 0

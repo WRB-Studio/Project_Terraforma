@@ -39,13 +39,15 @@ public class GameHandler : MonoBehaviour
         PlanetAttributeEffectHandler.init();
         CameraController.init();
         SunHandler.init();
-        Population.init();
         SpawnVegetation.init();
 
-        GUIHandler.init();
+        PopulationHandler.init();
         ResourceHandler.init();
-        PauseMenu.init();
         BuildingHandler.init();
+        EnergyHandler.init();
+
+        GUIHandler.init();
+        PauseMenu.init();
         BuildingChooser.init();
 
 
@@ -75,11 +77,14 @@ public class GameHandler : MonoBehaviour
             updatePerSecondCounter = updatePerSecondCounter % 1f;
             PlanetAttributeEffectHandler.updateCallPerSecond();
 
-            Population.updateCall();
-
             SpawnVegetation.updateCall();
 
-            BuildingHandler.udateCall();
+
+            PopulationHandler.updateCall();
+            ResourceHandler.updateCall();
+            BuildingHandler.updateCall();
+            EnergyHandler.updateCall();
+
         }
     }
 

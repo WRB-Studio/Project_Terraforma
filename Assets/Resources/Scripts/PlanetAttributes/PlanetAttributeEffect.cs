@@ -114,7 +114,7 @@ public class PlanetAttributeEffect : MonoBehaviour
         }//very low temperature kills population in non habitable zones
         else if(effectReason == eEffectReason.very_low_Temperature && affectedAttribute == PlanetAttribute.ePlanetAttributes.Population)
         {
-            Population.instance.killNonHabitablePopulation(strength);
+            PopulationHandler.instance.killNonHabitablePopulation(strength);
         }
         else//affects by all other reasons
         {
