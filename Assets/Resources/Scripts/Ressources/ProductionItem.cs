@@ -29,7 +29,7 @@ public class ProductionItem
 
     public void updateCall()
     {
-        if (!building.isActivated && !building.hasEnergy)
+        if (!building.IsActivated && !building.HasEnergy)
             return;
 
         if (isProducing)//production in progress
@@ -69,7 +69,7 @@ public class ProductionItem
 
     public bool canProduce()
     {
-        if (!building.isActivated && !building.hasEnergy)
+        if (!building.IsActivated && !building.HasEnergy)
             return false;
 
         for (int inputIndex = 0; inputIndex < input.Length; inputIndex++)

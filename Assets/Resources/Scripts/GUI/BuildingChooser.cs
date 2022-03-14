@@ -56,6 +56,7 @@ public class BuildingChooser : GUIInterface
         instance.showCategory(Building.eBuildingCategory.Population);
     }
 
+
     private void sortBuildingList()
     {
         for (int i = 0; i < instance.allBuildingButtons.Count; i++)

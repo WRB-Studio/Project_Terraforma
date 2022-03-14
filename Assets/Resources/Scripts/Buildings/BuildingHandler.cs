@@ -41,21 +41,20 @@ public class BuildingHandler : MonoBehaviour
     public static void registerBuilding(Building newBuilding)
     {
         allInstantiatedBuildings.Add(newBuilding);
-        EnergyHandler.addBuilding(newBuilding);
-        ResourceHandler.addBuilding(newBuilding);
+
+        EnergyHandler.registerBuilding(newBuilding);
+        ResourceHandler.registerBuilding(newBuilding);
+        PopulationHandler.registerBuilding(newBuilding);
     }
 
-    public static void removeBuilding(Building removeBuilding)
+    public static void deregisterBuilding(Building removeBuilding, PopulationHandler.eAddRemovePopulationReason reason)
     {
         allInstantiatedBuildings.Remove(removeBuilding);
-        EnergyHandler.removeBuilding(removeBuilding);
-        ResourceHandler.removeBuilding(removeBuilding);
 
-        if (removeBuilding.maxHousingUnits > 0)
-            PopulationHandler.addRemoveHousingUnits(-removeBuilding.maxHousingUnits);
+        EnergyHandler.deregisterBuilding(removeBuilding);
+        ResourceHandler.deregisterBuilding(removeBuilding);
+        PopulationHandler.deregisterBuilding(removeBuilding, reason);
 
-        if (removeBuilding.workplaces > 0)
-            PopulationHandler.addRemoveWorkplaces(-removeBuilding.workplaces);
-
+        Destroy(removeBuilding);
     }
 }

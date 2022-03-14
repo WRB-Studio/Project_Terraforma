@@ -115,23 +115,22 @@ MonoBehaviour:
   hitPoints: {x: 0, y: 0}
   realAVGStaticLoad: 3.25
   fictiveMaterialBonus: 1.25
-  maxHousingUnits: 0
+  housingUnits: {x: 0, y: 0}
   isCapital: 0
   isPopulationCentre: 0
-  storage: 0
-  energy_Production_Consuming: 0
-  Productivity: 0
-  productionItem:
-    output: []
-    input: []
-  productionResources: []
-  manufacturingResources: []
   workplaces: 0
-  isActivated: 0
-  hasEnergy: 0
+  storage: 0
+  energy_Production_Consuming: -1
+  productionItem:
+    input: []
+    output:
+      resourceType: 0
+      amount: 0
+    productionTime: 0
   canStandAlone: 0
+  canDisabled: 1
   isConnected: 0
-  isInHabitat: 0
+  inHabitat: 0
   oxygenAvailable: 0
   gravityAvailable: 0
   magneticFieldAvailable: 0

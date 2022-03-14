@@ -20,40 +20,61 @@ public class Building : MonoBehaviour
         None, Tech_1, Tech_2, Tech_3, Tech_4,
     }
 
+
     public eBuildingType buildingType = eBuildingType.None;
     public eBuildingCategory buildingCategory = eBuildingCategory.None;
     public eTechType buildingTech = eTechType.None;
     public bool unlocked;
+
 
     [Header("Hitpoints")]
     public Vector2Int hitPoints;
     public float realAVGStaticLoad = 3.25f; //Average calculations of real building loads. (kN/m²)
     public float fictiveMaterialBonus = 1.25f; //fictive material bonus for building loads. (kN/m²)
 
+
     [Header("Population")]
-    public long maxHousingUnits;
+    public Vector2Int housingUnits;//occupied by start; available housing units
     public bool isCapital;
     public bool isPopulationCentre;
 
-    [Header("Production")]
-    public int storage;
-    public int energy_Production_Consuming = 0; //+ = producing, - = consuming
-    public float Productivity;
-    public ProductionItem productionItem; //production infos
 
     [Header("Workplaces")]
     public int workplaces;
     public static float workplaceFactor = 10;
 
+
+    [Header("Production")]
+    public int storage;
+    public int energy_Production_Consuming = 0; //+ = producing, - = consuming
+    public ProductionItem productionItem; //production infos
+
+
     [Header("Some bools")]
-    public bool isActivated;
-    public bool hasEnergy;
     public bool canStandAlone;
+    public bool canDisabled;
+
+    private bool isActivated;
+    public bool IsActivated { get { return isActivated; } set { setIsActivated(value); } }
+
+    private bool hasEnergy;
+    public bool HasEnergy { get; set; }
+
     public bool isConnected;
-    public bool isInHabitat;
+    public bool IsConnected { get; set; }
+
+    public bool inHabitat;
+    public bool IsInHabitat { get { return inHabitat; } set { getIsInHabitat(); } }
+
     public bool oxygenAvailable;
+    public bool OxygenAvailable { get; set; }
+
     public bool gravityAvailable;
+    public bool GravityAvailable { get; set; }
+
     public bool magneticFieldAvailable;
+    public bool MagneticFieldAvailable { get; set; }
+
 
     [Header("Construction")]
     public Tuple<int, ResourceHandler.eResources> constructionRessources;
@@ -73,6 +94,27 @@ public class Building : MonoBehaviour
     private void Awake()
     {
         originMaterials = GetComponent<MeshRenderer>().materials;
+        init();
+    }
+
+
+    #region start initializations
+
+    private void init()
+    {
+        calculateHitPoints();
+
+        //calculate workplaces
+        if (workplaces != -1)
+            calculateWorkplaces();
+
+        calculateEnergy();
+
+        calculateConstructionTime();
+
+        calculateConstructionRessources();
+
+        IsActivated = true;
     }
 
 
@@ -83,7 +125,7 @@ public class Building : MonoBehaviour
 
     public void calculateConstructionTime()
     {
-        //constructionTime = Building volume * constructionTimeFactor
+        constructionTime.y = getVolumeOfBuilding(gameObject) * constructionTimeFactor;
     }
 
     public void calculateConstructionRessources()
@@ -108,56 +150,55 @@ public class Building : MonoBehaviour
         workplaces = (int)Math.Round(result, 0);
     }
 
-    public void calculateProductivity()
-    {
-        //Hitpoints-%, Satisfaction, occupied worplaces-%
-    }
-
-    public void calculateNeededEnergy()
+    public void calculateEnergy()
     {
         //population building energy consum = people * flat rate energy consum for private people 5.5 kWh
         //other building energy consum = default energy consum + building footprint (x * y) * flat rate energy consum for other buildings (25 kWh)
-        int energyConsumeByWorkplace = Mathf.RoundToInt(workplaces * 2.5f);
-        int energyConsumeByHousingUnit = Mathf.RoundToInt(maxHousingUnits * 5.5f);
+        int energyProductionBYPowerPlant = Mathf.RoundToInt(workplaces * 1.5f * 30);
+        int energyConsumeByWorkplace = Mathf.RoundToInt(workplaces * 5.5f);
+        int energyConsumeByHousingUnit = Mathf.RoundToInt(housingUnits.y * 2.5f);
+        int energyConsumPopulation = 10;
         int energyConsumMining = 20;
         int energyConsumProduction = 25;
         int energyConsumSpecial = 30;
         int energyConsumTerraforming = 40;
         int energyConsumDefense = 50;
         int buildingFloorSize = Mathf.RoundToInt(getFloorSize(gameObject));
+        int buildingVolume = Mathf.RoundToInt(getVolumeOfBuilding(gameObject));
 
-        switch (buildingCategory)
+        
+        if (energy_Production_Consuming < 0)//isnt a power plant
         {
-            case eBuildingCategory.None:
-                break;
-            case eBuildingCategory.Population:
-                energy_Production_Consuming = Mathf.RoundToInt(energyConsumeByHousingUnit);
-                break;
-            case eBuildingCategory.Mining:
-                energy_Production_Consuming = Mathf.RoundToInt(energyConsumeByWorkplace + buildingFloorSize * energyConsumMining);
-                break;
-            case eBuildingCategory.Production:
-                energy_Production_Consuming = Mathf.RoundToInt(energyConsumeByWorkplace + buildingFloorSize * energyConsumProduction);
-                break;
-            case eBuildingCategory.Special:
-                energy_Production_Consuming = Mathf.RoundToInt(energyConsumeByWorkplace + buildingFloorSize * energyConsumSpecial);
-                break;
-            case eBuildingCategory.Defense:
-                energy_Production_Consuming = Mathf.RoundToInt(energyConsumeByWorkplace + buildingFloorSize * energyConsumDefense);
-                break;
-            case eBuildingCategory.Terraforming:
-                energy_Production_Consuming = Mathf.RoundToInt(energyConsumeByWorkplace + buildingFloorSize * energyConsumTerraforming);
-                break;
-            default:
-                break;
+            switch (buildingCategory)
+            {
+                case eBuildingCategory.None:
+                    break;
+                case eBuildingCategory.Population:
+                    energy_Production_Consuming = -Mathf.RoundToInt(energyConsumeByHousingUnit + buildingVolume * energyConsumPopulation);
+                    break;
+                case eBuildingCategory.Mining:
+                    energy_Production_Consuming = -Mathf.RoundToInt(energyConsumeByWorkplace + buildingVolume * energyConsumMining);
+                    break;
+                case eBuildingCategory.Production:
+                    energy_Production_Consuming = -Mathf.RoundToInt(energyConsumeByWorkplace + buildingVolume * energyConsumProduction);
+                    break;
+                case eBuildingCategory.Special:
+                    energy_Production_Consuming = -Mathf.RoundToInt(energyConsumeByWorkplace + buildingVolume * energyConsumSpecial);
+                    break;
+                case eBuildingCategory.Defense:
+                    energy_Production_Consuming = -Mathf.RoundToInt(energyConsumeByWorkplace + buildingVolume * energyConsumDefense);
+                    break;
+                case eBuildingCategory.Terraforming:
+                    energy_Production_Consuming = -Mathf.RoundToInt(energyConsumeByWorkplace + buildingVolume * energyConsumTerraforming);
+                    break;
+                default:
+                    break;
+            }
         }
-
-    }
-
-    public void checkDestroyingBuilding()
-    {
-        if (hitPoints.x <= 0)
-            Destroy(gameObject);
+        else if (energy_Production_Consuming > 0)//is power plant
+        {
+            energy_Production_Consuming = +Mathf.RoundToInt(energyProductionBYPowerPlant + buildingVolume); 
+        }
     }
 
     public void calculateHitPoints()
@@ -165,12 +206,131 @@ public class Building : MonoBehaviour
         hitPoints.y = Mathf.RoundToInt(realAVGStaticLoad + fictiveMaterialBonus); // * buildingHigh);
     }
 
+    public float getFloorSize(GameObject buildingObject)
+    {
+        //Fetch the Collider from the GameObject
+        Collider m_Collider = buildingObject.GetComponent<Collider>();
+
+        //Fetch the size of the Collider volume
+        Vector3 m_Size = m_Collider.bounds.size;
+
+        return m_Size.x * m_Size.z;
+    }
+
+    public float getVolumeOfBuilding(GameObject buildingObject)
+    {
+        Mesh mesh = buildingObject.GetComponent<MeshFilter>().mesh;
+
+        float volume = 0;
+
+        Vector3[] vertices = mesh.vertices;
+        int[] triangles = mesh.triangles;
+
+        for (int i = 0; i < triangles.Length; i += 3)
+        {
+            Vector3 p1 = vertices[triangles[i + 0]];
+            Vector3 p2 = vertices[triangles[i + 1]];
+            Vector3 p3 = vertices[triangles[i + 2]];
+            volume += SignedVolumeOfTriangle(p1, p2, p3);
+        }
+        return Mathf.Abs(volume);
+    }
+
+    public float SignedVolumeOfTriangle(Vector3 p1, Vector3 p2, Vector3 p3)
+    {
+        float v321 = p3.x * p2.y * p1.z;
+        float v231 = p2.x * p3.y * p1.z;
+        float v312 = p3.x * p1.y * p2.z;
+        float v132 = p1.x * p3.y * p2.z;
+        float v213 = p2.x * p1.y * p3.z;
+        float v123 = p1.x * p2.y * p3.z;
+
+        return (1.0f / 6.0f) * (-v321 + v231 + v312 - v132 - v213 + v123);
+    }
+
+    #endregion
+
+
+    public bool getIsInHabitat()
+    {
+        return inHabitat;
+    }
+
+    private void setIsActivated(bool activate)
+    {
+        if (!canDisabled)
+        {
+            isActivated = true;
+            activateWorkplaces(true);
+            activateHousingUnits(true);
+            return;
+        }
+
+        if (activate)
+        {
+            isActivated = true;
+            activateWorkplaces(true);
+            activateHousingUnits(true);
+
+            //if (hasEnergy)
+            //{
+            //    isActivated = true;
+            //    activateWorkplaces(true);
+            //    activateHousingUnits(true);
+            //}
+            //else
+            //{
+            //    isActivated = false;
+            //    activateWorkplaces(false);
+            //    activateHousingUnits(false);
+            //}
+        }
+        else
+        {
+            isActivated = false;
+            activateWorkplaces(false);
+            activateHousingUnits(false);
+        }
+    }
+
+    private void activateWorkplaces(bool activate)
+    {
+        if (activate)
+        {
+            PopulationHandler.addRemoveWorkplaces(workplaces);
+        }
+        else
+        {
+            PopulationHandler.addRemoveWorkplaces(-workplaces);
+        }
+    }
+
+    private void activateHousingUnits(bool activate)
+    {
+        if (activate)
+        {
+            PopulationHandler.addRemoveHousingUnits(housingUnits.y);
+        }
+        else
+        {
+            PopulationHandler.addRemoveHousingUnits(-housingUnits.y);
+        }
+    }
 
     public void repair()
     {
 
     }
 
+    public void checkDestroyingBuilding(PopulationHandler.eAddRemovePopulationReason reason)
+    {
+        if (hitPoints.x <= 0)
+            BuildingHandler.deregisterBuilding(this, reason);
+    }
+
+
+
+    #region build methodes
 
     public bool isBuildable()
     {
@@ -217,33 +377,27 @@ public class Building : MonoBehaviour
 
             calculateBuildingAltitude();//building height on planet
 
-            //isnt a power plant
-            if (energy_Production_Consuming < 0)
-                calculateNeededEnergy();
+            ////calculate workplaces
+            //if (workplaces != -1)
+            //    calculateWorkplaces();
 
-            //if building has housing units
-            if (maxHousingUnits > 0)
-                PopulationHandler.addRemoveHousingUnits(maxHousingUnits);//add housing units
+            if (productionItem != null)
+                productionItem.building = this;
 
-            //add population when colony ship
-            if (name.Contains("Colony Ship"))
-                PopulationHandler.addRemovePopulation(maxHousingUnits);
+            IsActivated = true;
 
-            //calculate/add worlplaces
-            if (workplaces != -1)
-            {
-                calculateWorkplaces();
-                PopulationHandler.addRemoveWorkplaces(workplaces);
-            }
 
+            BuildingHandler.registerBuilding(this);
             BuildingChooser.instance.refreshBuildingChooser();
         }
     }
 
-    public void removeBuilding()
+    public void removeBuilding(PopulationHandler.eAddRemovePopulationReason reason)
     {
-        BuildingHandler.removeBuilding(this);
+        BuildingHandler.deregisterBuilding(this, reason);
     }
+
+    #endregion
 
 
     private void OnCollisionEnter(Collision collision)
@@ -263,52 +417,23 @@ public class Building : MonoBehaviour
     }
 
 
-    public float getFloorSize(GameObject buildingObject)
+    private void OnMouseDown()
     {
-        //Fetch the Collider from the GameObject
-        Collider m_Collider = buildingObject.GetComponent<Collider>();
-
-        //Fetch the size of the Collider volume
-        Vector3 m_Size = m_Collider.bounds.size;
-
-        return m_Size.x * m_Size.z;
-    }
-
-    public float getVolumeOfBuilding(GameObject buildingObject)
-    {
-        Mesh mesh = buildingObject.GetComponent<MeshFilter>().mesh;
-
-        float volume = 0;
-
-        Vector3[] vertices = mesh.vertices;
-        int[] triangles = mesh.triangles;
-
-        for (int i = 0; i < triangles.Length; i += 3)
+        if (GUIHandler.instance.buildingInfoPanel.activeSelf && BuildingInfoGUI.instance.selectedBuilding == this)
         {
-            Vector3 p1 = vertices[triangles[i + 0]];
-            Vector3 p2 = vertices[triangles[i + 1]];
-            Vector3 p3 = vertices[triangles[i + 2]];
-            volume += SignedVolumeOfTriangle(p1, p2, p3);
+            BuildingInfoGUI.instance.showHideGUI();
         }
-        return Mathf.Abs(volume);
-    }
-
-    public float SignedVolumeOfTriangle(Vector3 p1, Vector3 p2, Vector3 p3)
-    {
-        float v321 = p3.x * p2.y * p1.z;
-        float v231 = p2.x * p3.y * p1.z;
-        float v312 = p3.x * p1.y * p2.z;
-        float v132 = p1.x * p3.y * p2.z;
-        float v213 = p2.x * p1.y * p3.z;
-        float v123 = p1.x * p2.y * p3.z;
-
-        return (1.0f / 6.0f) * (-v321 + v231 + v312 - v132 - v213 + v123);
-    }
-
-
-    public bool getIsInHabitat()
-    {
-        return isInHabitat;
+        else if (GUIHandler.instance.buildingInfoPanel.activeSelf && BuildingInfoGUI.instance.selectedBuilding != this)
+        {
+            BuildingInfoGUI.instance.selectedBuilding = this;
+            BuildingInfoGUI.instance.refreshBuildingInfo();
+        }
+        else if (!GUIHandler.instance.buildingInfoPanel.activeSelf)
+        {
+            BuildingInfoGUI.instance.showHideGUI();
+            BuildingInfoGUI.instance.selectedBuilding = this;
+            BuildingInfoGUI.instance.refreshBuildingInfo();
+        }
     }
 
 }

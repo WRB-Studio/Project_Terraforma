@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using System;
 
-public class PlanetAttribute : MonoBehaviour
+public class PlanetAttribute : GUIInterface
 {
     public enum ePlanetAttributes
     {
@@ -85,8 +85,24 @@ public class PlanetAttribute : MonoBehaviour
             Sprite currentSymbol = null;
             for (int x = 0; x < symbols.Length; x++)
             {
+                if (curPlanetAttribute.planetAttribute.ToString() == "Water")
+                {
+                    if (symbols[x].name == "Water_Ice")
+                    {
+                        currentSymbol = symbols[x];
+                        break;
+                    }
+                    else
+                    {
+                        continue;
+                    }
+                }
+
                 if (symbols[x].name == curPlanetAttribute.planetAttribute.ToString())
+                {
                     currentSymbol = symbols[x];
+                    break;
+                }
             }
 
             //create planet attribute gui element
@@ -863,6 +879,21 @@ public class PlanetAttribute : MonoBehaviour
     public void sizeHandling()
     {
 
+    }
+
+
+    public override void showHideGUI()
+    {
+        if (GUIHandler.instance.planetAttributesPanel.activeSelf)
+        {
+            GUIHandler.instance.planetAttributesPanel.SetActive(false);
+            GUIHandler.instance.populationInfoPanel.SetActive(false);
+        }
+        else
+        {
+            GUIHandler.instance.planetAttributesPanel.SetActive(true);
+            GUIHandler.instance.populationInfoPanel.SetActive(true);
+        }
     }
 
 

@@ -25,13 +25,11 @@ public class GameHandler : MonoBehaviour
 
     private void Start()
     {
-        StartCoroutine(initCoroutine());
+        init();
     }
 
-    private IEnumerator initCoroutine()
+    private void init()
     {
-        yield return new WaitForSeconds(1);
-
         if (removeSaveGame)
             SaveAndLoad.removeSaveGame();
 
@@ -49,7 +47,6 @@ public class GameHandler : MonoBehaviour
         GUIHandler.init();
         PauseMenu.init();
         BuildingChooser.init();
-
 
         isInit = true;
     }
@@ -85,6 +82,8 @@ public class GameHandler : MonoBehaviour
             BuildingHandler.updateCall();
             EnergyHandler.updateCall();
 
+            PopulationInfo.updateCall();
+            EnergyInfo.updateCall();
         }
     }
 

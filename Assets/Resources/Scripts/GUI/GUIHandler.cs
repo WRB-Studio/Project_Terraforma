@@ -11,6 +11,9 @@ public class GUIHandler : MonoBehaviour
     public GameObject planetAttributesPanel;
     public GameObject ressourcePanel;
     public GameObject buildingMenuPanel;
+    public GameObject populationInfoPanel;
+    public GameObject energyInfoPanel;
+    public GameObject buildingInfoPanel;
 
     [Header("Planet attribute properties")]
     public GameObject planetAttributeElementParent;
@@ -50,13 +53,23 @@ public class GUIHandler : MonoBehaviour
     {
         instance.btPlaySpeed.onClick.AddListener(delegate { setNextPlaySpeed(); });
 
-        instance.btPlanetTerraforming.onClick.AddListener(delegate { showHide(planetAttributesPanel); });
+        instance.btPlanetTerraforming.onClick.AddListener(delegate { PlanetAttribute.instance.showHideGUI(); });
         instance.btRessources.onClick.AddListener(delegate { showHide(ressourcePanel); });
         instance.btBuildMenue.onClick.AddListener(delegate { BuildingChooser.instance.showHideGUI(); });
 
-        planetAttributesPanel.SetActive(false);
-        ressourcePanel.SetActive(false);
-        buildingMenuPanel.SetActive(false);
+
+        if(planetAttributesPanel.activeSelf)
+            PlanetAttribute.instance.showHideGUI();
+
+        if (ressourcePanel.activeSelf)
+            ressourcePanel.SetActive(false);
+
+        if (buildingMenuPanel.activeSelf)
+            BuildingChooser.instance.showHideGUI();
+
+        if (buildingInfoPanel.activeSelf)
+            BuildingInfoGUI.instance.showHideGUI();
+        
     }
 
     public void showHide(GameObject guiObject)
@@ -99,6 +112,7 @@ public class GUIHandler : MonoBehaviour
             instance.btPlaySpeed.transform.GetChild(0).GetComponent<Text>().text = playSpeedSymbol;
         }
     }
+
 
     public static void save()
     {

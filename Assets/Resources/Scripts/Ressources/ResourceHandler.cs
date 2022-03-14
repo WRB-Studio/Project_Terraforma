@@ -147,7 +147,7 @@ public class ResourceHandler : MonoBehaviour
 
 
 
-    public static void addBuilding(Building newBuilding)
+    public static void registerBuilding(Building newBuilding)
     {
         if (newBuilding.productionItem != null)
         {
@@ -158,11 +158,11 @@ public class ResourceHandler : MonoBehaviour
         if (newBuilding.storage > 0)
         {
             storageBuildings.Add(newBuilding);
-            ResourceHandler.addStorage(newBuilding.storage);
+            addStorage(newBuilding.storage);
         }
     }
 
-    public static void removeBuilding(Building removeBuilding)
+    public static void deregisterBuilding(Building removeBuilding)
     {
         if (removeBuilding.productionItem != null)
         {

@@ -55,27 +55,11 @@ public class PlanetAttributeGUIElement : MonoBehaviour, IPointerEnterHandler, IP
             sliderValue.value = PopulationHandler.Population;
 
             txtCurrentValue.text = PopulationHandler.Population.ToString();
-            setTrendForPopulation(PopulationHandler.getBirthratePerThousend());
+            setTrendForPopulation(PopulationHandler.BirthratePer1000);
 
             sliderValue.maxValue = PopulationHandler.HousingUnits;
             txtMaxValue.text = sliderValue.maxValue.ToString();
 
-            /*
-             population
-             in Habitat 
-             not in habitat
-             birthrate
-             housing units
-             homeless
-             worplaces
-             employed
-             unemployed
-             */
-            txtCurrentValue.text = "Total: " + PopulationHandler.Population + 
-                                   "\t\tBirthrate: " + PopulationHandler.getBirthratePerThousend() + 
-                                   "\t\tHomeless: " + PopulationHandler.getHomeless() + 
-                                   "\t\tWorkplaces: " + PopulationHandler.getEmployed() + "/" + PopulationHandler.Workplaces +
-                                   "\t\tunemployed: " + PopulationHandler.getUnemployed();
             setTrend(PlanetAttributeEffectHandler.getTrendAmountOf(planetAttributeScrp.planetAttribute));
         }
         else
