@@ -7,19 +7,28 @@ public class ProductionItem
 {
     public Building building { get; set; }
 
-    public ResourcePairInfo[] input;
-    public ResourcePairInfo output;
-
     public float productionTime;
+
     private float countdown;
+    public float Countdown { get => countdown; }
 
     private bool isProducing;
+    public bool IsProducing { get => isProducing; }
+
     private bool isHolding;
+    public bool IsHolding { get => isHolding; }
+
+
+    public ResourcePairInfo[] input = null;
+    public ResourcePairInfo output = null;
+
 
 
 
     public ProductionItem(Building buildingVal, ResourcePairInfo[] inputVal, ResourcePairInfo outputVal, float productionTimeVal)
     {
+        output = null;
+
         building = buildingVal;
         input = inputVal;
         output = outputVal;
@@ -32,7 +41,7 @@ public class ProductionItem
         if (!building.IsActivated && !building.HasEnergy)
             return;
 
-        if (isProducing)//production in progress
+        if (IsProducing)//production in progress
         {
             if (countdown > 0)//handle producing time
             {
@@ -41,7 +50,7 @@ public class ProductionItem
             else//when production is completed
             {
                 //store new product when enough store capacity
-                if(ResourceHandler.canStore(output.amount))
+                if (ResourceHandler.canStore(output.amount))
                 {
                     ResourceHandler.addResource(output);
                     isHolding = false;
@@ -82,5 +91,6 @@ public class ProductionItem
 
         return true;
     }
+
 
 }

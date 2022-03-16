@@ -47,6 +47,7 @@ public class GameHandler : MonoBehaviour
         GUIHandler.init();
         PauseMenu.init();
         BuildingChooser.init();
+        BuildingInfoGUI.init();
 
         isInit = true;
     }
@@ -84,6 +85,8 @@ public class GameHandler : MonoBehaviour
 
             PopulationInfo.updateCall();
             EnergyInfo.updateCall();
+
+            BuildingInfoGUI.updateCall();
         }
     }
 

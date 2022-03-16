@@ -7,6 +7,8 @@ public class ResourceHandler : MonoBehaviour
 {
     public enum eResources
     {
+        None,
+
         iron, copper, nickel,
         gold, silicon, cobalt,
         titanium,
@@ -41,6 +43,9 @@ public class ResourceHandler : MonoBehaviour
         //generate ressources
         for (int i = 0; i < Enum.GetNames(typeof(eResources)).Length; i++)
         {
+            if (((eResources)i) == eResources.None)
+                continue;
+
             RessourcesGUIElement newResGUIElement = Instantiate(GUIHandler.instance.ressourceGUIElementPrefab, GUIHandler.instance.ressourcePanel.transform).GetComponent<RessourcesGUIElement>();
             ressourceType.Add(new Tuple<eResources, int, RessourcesGUIElement>((eResources)i, 0, newResGUIElement));
             newResGUIElement.itemName.text = ((eResources)i).ToString();
@@ -84,6 +89,9 @@ public class ResourceHandler : MonoBehaviour
 
     public static void addResource(ResourcePairInfo resPair)
     {
+        if (resPair.resourceType == eResources.None)
+            return;
+
         resStorageCapacity.x += resPair.amount;
         GUIHandler.instance.txtStorage.text = resStorageCapacity.x + " / " + resStorageCapacity.y;
 

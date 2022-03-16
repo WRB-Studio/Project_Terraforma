@@ -47,7 +47,7 @@ public class Building : MonoBehaviour
     [Header("Production")]
     public int storage;
     public int energy_Production_Consuming = 0; //+ = producing, - = consuming
-    public ProductionItem productionItem; //production infos
+    public ProductionItem productionItem = null; //production infos
 
 
     [Header("Some bools")]
@@ -60,19 +60,19 @@ public class Building : MonoBehaviour
     private bool hasEnergy;
     public bool HasEnergy { get; set; }
 
-    public bool isConnected;
+    private bool isConnected;
     public bool IsConnected { get; set; }
 
-    public bool inHabitat;
+    private bool inHabitat;
     public bool IsInHabitat { get { return inHabitat; } set { getIsInHabitat(); } }
 
-    public bool oxygenAvailable;
+    private bool oxygenAvailable;
     public bool OxygenAvailable { get; set; }
 
-    public bool gravityAvailable;
+    private bool gravityAvailable;
     public bool GravityAvailable { get; set; }
 
-    public bool magneticFieldAvailable;
+    private bool magneticFieldAvailable;
     public bool MagneticFieldAvailable { get; set; }
 
 
@@ -203,7 +203,8 @@ public class Building : MonoBehaviour
 
     public void calculateHitPoints()
     {
-        hitPoints.y = Mathf.RoundToInt(realAVGStaticLoad + fictiveMaterialBonus); // * buildingHigh);
+        hitPoints.y = (int)Math.Round(realAVGStaticLoad + fictiveMaterialBonus * getVolumeOfBuilding(gameObject), 0); // * buildingHigh);
+        hitPoints.x = hitPoints.y;
     }
 
     public float getFloorSize(GameObject buildingObject)
